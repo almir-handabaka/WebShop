@@ -1,0 +1,183 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+
+</div>
+
+
+
+<h3>Ukupno <%= narudzbe.length %> novih narudžbi</h3>
+<div class="table-responsive">
+    <table class="table table-striped table-sm table-success">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Naziv</th>
+                <th scope="col">Cijena po komadu</th>
+                <th scope="col">Kolicina</th>
+                <th scope="col">Totalna cijena</th>
+                <th scope="col">Datum kreiranja</th>
+                <th scope="col">Akcije</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for(let i=0;i<narudzbe.length;i++) { %>
+                <% if(narudzbe[i].status===1) { %>
+                    <tr>
+                        <td>
+                            <%= i + 1 %>
+                        </td>
+                        <td>
+                            <%= narudzbe[i].naziv %>
+                        </td>
+                        <td>
+                            <%= narudzbe[i].cijena %> KM
+                        </td>
+                        <td>
+                            <%= narudzbe[i].kolicina %>
+                        </td>
+                        <td>
+                            <%= narudzbe[i].cijena * narudzbe[i].kolicina %> KM
+                        </td>
+                        <td>
+                            <%= datum %>
+                        </td>
+                        <td>
+                            <div class="btn-group me-2">
+                                <button type="button" class="btn btn-sm btn-outline-success" data-bs-toggle="modal"
+                                    data-bs-target="#staticBackdropUrediArtikal">
+                                    <span data-feather="calendar"></span>
+                                    Prihvati
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-danger">
+                                    <span data-feather="calendar"></span>
+                                    Odbij
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <% } %>
+                        <% } %>
+
+        </tbody>
+    </table>
+
+    <div
+        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    </div>
+
+    <h3>Prihvaćene neisporučene narudžbe</h3>
+    <table class="table table-striped table-sm table-secondary">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Naziv</th>
+                <th scope="col">Cijena po komadu</th>
+                <th scope="col">Kolicina</th>
+                <th scope="col">Totalna cijena</th>
+                <th scope="col">Datum kreiranja</th>
+                <th scope="col">Promjena statusa</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for(let i=0;i<narudzbe.length;i++) { %>
+                <% if(narudzbe[i].status===1) { %>
+                    <tr>
+                        <td>
+                            <%= i + 1 %>
+                        </td>
+                        <td>
+                            <%= narudzbe[i].naziv %>
+                        </td>
+                        <td>
+                            <%= narudzbe[i].cijena %> KM
+                        </td>
+                        <td>
+                            <%= narudzbe[i].kolicina %>
+                        </td>
+                        <td>
+                            <%= narudzbe[i].cijena * narudzbe[i].kolicina %> KM
+                        </td>
+                        <td>
+                            <%= datum %>
+                        </td>
+                        <td>
+                            <div class="btn-group me-2">
+                                <button type="button" class="btn btn-sm btn-outline-success" data-bs-toggle="modal"
+                                    data-bs-target="#staticBackdropUrediArtikal">
+                                    <span data-feather="calendar"></span>
+                                    Isporučeno
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-danger">
+                                    <span data-feather="calendar"></span>
+                                    Otkaži
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <% } %>
+                        <% } %>
+
+        </tbody>
+    </table>
+
+
+    <div
+        class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    </div>
+
+    <h3>Sve narudžbe</h3>
+    <table class="table table-striped table-sm table-secondary">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Naziv</th>
+                <th scope="col">Cijena po komadu</th>
+                <th scope="col">Kolicina</th>
+                <th scope="col">Totalna cijena</th>
+                <th scope="col">Datum kreiranja</th>
+                <th scope="col">Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for(let i=0;i<narudzbe.length;i++) { %>
+                <% if(narudzbe[i].status===3 || narudzbe[i].status===4 || narudzbe[i].status===5) { %>
+                    <tr>
+                        <td>
+                            <%= i + 1 %>
+                        </td>
+                        <td>
+                            <%= narudzbe[i].naziv %>
+                        </td>
+                        <td>
+                            <%= narudzbe[i].cijena %> KM
+                        </td>
+                        <td>
+                            <%= narudzbe[i].kolicina %>
+                        </td>
+                        <td>
+                            <%= narudzbe[i].cijena * narudzbe[i].kolicina %> KM
+                        </td>
+                        <td>
+                            <%= datum %>
+                        </td>
+                        <td>
+                            <% if(narudzbe[i].status===3) {%>
+                                Isporučeno
+
+                                <% } %>
+                                    <% if(narudzbe[i].status===4) {%>
+                                        Otkazano od kupca
+                                        <% } %>
+                                            <% if(narudzbe[i].status===5) {%>
+                                                Otkazano od trgovca
+                                                <% } %>
+                        </td>
+
+                    </tr>
+                    <% } %>
+                        <% } %>
+
+        </tbody>
+    </table>
+
+
+</div>

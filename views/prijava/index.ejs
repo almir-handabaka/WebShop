@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <title>
+    <%= title %>
+  </title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+
+
+
+
+  <style>
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+
+    .b-example-divider {
+      height: 3rem;
+      background-color: rgba(0, 0, 0, .1);
+      border: solid rgba(0, 0, 0, .15);
+      border-width: 1px 0;
+      box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+    }
+
+    @media (min-width: 992px) {
+      .rounded-lg-3 {
+        border-radius: .3rem;
+      }
+    }
+
+
+    .bi {
+      vertical-align: -.125em;
+      fill: currentColor;
+    }
+
+    .rounded-4 {
+      border-radius: .5rem;
+    }
+
+    .rounded-5 {
+      border-radius: .75rem;
+    }
+
+    .rounded-6 {
+      border-radius: 1rem;
+    }
+
+    .modal-sheet .modal-dialog {
+      width: 380px;
+      transition: bottom .75s ease-in-out;
+    }
+
+    .modal-sheet .modal-footer {
+      padding-bottom: 2rem;
+    }
+
+    .modal-alert .modal-dialog {
+      width: 380px;
+    }
+
+    .border-right {
+      border-right: 1px solid #eee;
+    }
+
+    .modal-tour .modal-dialog {
+      width: 380px;
+    }
+  </style>
+
+
+
+</head>
+
+<body>
+
+  <main>
+
+    <div class="b-example-divider"></div>
+
+    <div class="container col-xl-10 col-xxl-8 px-4 py-5">
+      <div class="row align-items-center g-lg-5 py-5">
+        <div class="col-lg-7 text-center text-lg-start">
+          <h1 class="display-4 fw-bold lh-1 mb-3">Prijava na Web Shop</h1>
+          <p class="col-lg-10 fs-4">Dobrodošli na Web Shop. Logujte se u vaš račun. Ukoliko nemate račun registrujte se
+            kako bi pristupili Web Shopu.</p>
+        </div>
+        <div class="col-md-10 mx-auto col-lg-5">
+          <form class="p-4 p-md-5 border rounded-3 bg-light" method="post" action="/login">
+            <div class="form-floating mb-3">
+              <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="email">
+              <label for="floatingInput">Email adresa</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input type="password" class="form-control" id="floatingPassword" placeholder="Password"  name="password">
+              <label for="floatingPassword">Šifra</label>
+            </div>
+            <div class="checkbox mb-3">
+              <label>
+                <input  name="rememberme" type="checkbox" value="remember-me"> Zapamti me
+              </label>
+            </div>
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Prijavi se</button>
+            <hr class="my-4">
+            <button class="w-100 btn btn-sm btn-success" type="button" data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop">Kreiraj
+              novi račun</button>
+            <hr class="my-2">
+            <button class="w-100 btn btn-sm btn-danger" type="button" data-bs-toggle="modal"
+              data-bs-target="#staticBackdropTrgovina">Napravi trgovinu</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="b-example-divider"></div>
+
+
+
+  </main>
+
+  <!-- Modal za registrovanje korisnika -->
+  <div class=" modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header p-5 pb-4 border-bottom-0">
+          <!-- <h5 class="modal-title">Modal title</h5> -->
+          <h2 class="fw-bold mb-0">Sign up for free</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-5 pt-0">
+          <form class="" method="post" action="/register/user">
+            <div class="form-floating mb-3">
+              <input name="username_korisnika" type="text" class="form-control rounded-4" id="floatingInput"
+                placeholder="Username">
+              <label for="floatingInput">Korisničko ime</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input name="email_korisnika" type="email" class="form-control rounded-4" id="floatingInput"
+                placeholder="name@example.com">
+              <label for="floatingInput">E-mail adresa</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input name="password_korisnika" type="password" class="form-control rounded-4" id="floatingPassword"
+                placeholder="Password">
+              <label for="floatingPassword">Šifra</label>
+            </div>
+            <button class="w-100 mb-2 btn btn-lg rounded-4 btn-success" type="submit">Registruj se</button>
+            <small class="text-muted">Registrovanjem prihvaćate naše uslove korištenja.</small>
+            <hr class="my-4">
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Modal za trgovine -->
+  <div class=" modal fade" id="staticBackdropTrgovina" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header p-5 pb-4 border-bottom-0">
+          <!-- <h5 class="modal-title">Modal title</h5> -->
+          <h2 class="fw-bold mb-0">Napravi svoju trgovinu i prodaj svoje artikle na Web Shopu</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-5 pt-0">
+          <form class="" method="post" action="/register/trgovina">
+            <div class="form-floating mb-3">
+              <input name="naziv_trgovine" type="text" class="form-control rounded-4" id="floatingInput"
+                placeholder="Username">
+              <label for="floatingInput">Ime trgovine</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input name="email_trgovine" type="email" class="form-control rounded-4" id="floatingInput"
+                placeholder="name@example.com">
+              <label for="floatingInput">E-mail adresa</label>
+            </div>
+            <div class="form-floating mb-3">
+              <input name="password_trgovine" type="password" class="form-control rounded-4" id="floatingPassword"
+                placeholder="Password">
+              <label for="floatingPassword">Šifra</label>
+            </div>
+            <button class="w-100 mb-2 btn btn-lg rounded-4 btn-success" type="submit">Registruj se</button>
+            <small class="text-muted">Registrovanjem prihvaćate naše uslove korištenja.</small>
+            <hr class="my-4">
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+
+  </script>
+
+</body>
+
+</html>
