@@ -1,132 +1,131 @@
 var express = require('express');
 var router = express.Router();
 const bcrypt = require('bcrypt');
-const { Pool } = require('pg');
+var { pool } = require('../database/index.js');
 
 // almir
 // test123
 
-const pool = new Pool({
-  user: 'qhnzgbyb',
-  host: 'abul.db.elephantsql.com',
-  database: 'qhnzgbyb',
-  password: 'Xl1jeBR_slvODzGyVM_l-VRdi1myfxTZ',
-  port: 5432,
-})
 
 
 var db_funkcije = {
-    getKorisnik: (username, email) => {
-        return new Promise((resolve,reject) => {
-            pool.query('select * from korisnici where username = $1 or email = $2', [username, email], (err, result) => {
-                if(err){
+    getKorisnik: (email) => {
+        return new Promise((resolve, reject) => {
+            pool.query('select * from korisnici where email = $1', [email], (err, result) => {
+                if (err) {
                     return reject(err);
                 }
                 return resolve(result.rows);
-                
+
             })
         })
     },
 
-    sacuvajNovogKorisnika: (username, hash, email, tip) => {
-        return new Promise((resolve,reject) => {
-            pool.query('insert into korisnici (username, password_hash, email, tip) values($1, $2, $3, $4)', [username, hash, email, tip], (err, result) => {
-                if(err){
+    dodajKorisnika: (ime, prezime, email, password_hash, tip) => {
+        return new Promise((resolve, reject) => {
+            pool.query('insert into korisnici (ime, prezime, email, password_hash, tip_korisnika) values($1, $2, $3, $4, $5)', [ime, prezime, email, password_hash, tip], (err, result) => {
+                if (err) {
                     return reject(err);
                 }
-                return resolve();
-                
+                return resolve(result);
+
             })
         });
-    }
+    },
+
+    dodajTrgovinu: (naziv_trgovine, korisnik_id) => {
+        return new Promise((resolve, reject) => {
+            pool.query('insert into trgovine (naziv, korisnik_id) values($1, $2)', [naziv_trgovine, korisnik_id], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result);
+
+            })
+        });
+    },
 
 
 };
 
+const hashPassword = (plaintext_password) => {
+    let saltRounds = 10;
+    return new Promise((resolve, reject) => {
+        bcrypt.genSalt(saltRounds, function (err, salt) {
+            bcrypt.hash(plaintext_password, salt, function (err, hash) {
+                if (err) {
+                    reject(err);
+                }
+                return resolve(hash);
+            });
+        });
+    });
+
+}
+
+
 
 /*  Registracija korisnika i trgovine 
-    Ne dozvoljava se registracija ako vec postoji slican username i email sacuvan u bazi
-
+    Ne dozvoljava se registracija ako vec postoji isti email sacuvan u bazi
 */
 
-router.post('/user', function(req, res, next) {
-    const username = req.body.username_korisnika;
-    const password = req.body.password_korisnika;
-    const email = req.body.email_korisnika;
-    let tip = 1;
-    
-    db_funkcije.getKorisnik(username, email).then(
-        (result) => {
-            if(result.length != 0)
-                res.status(406).json({ error: 'username/email' });
-            else{
-                const saltRounds = 10;
-                const myPlaintextPassword = password;
-                bcrypt.genSalt(saltRounds, function(err, salt) {
-                    bcrypt.hash(myPlaintextPassword, salt, function(err, hash) {
-                        db_funkcije.sacuvajNovogKorisnika(username, hash, email, tip).then(
-                            ()=> {
-                                console.log("Novi korisnik uspjesno registrovan!");
-                                //res.redirect('/login')
-                                res.status(200);
-                            },
-                            (error) => {
-                                console.log(error);
-                                console.log("Novi korisnik NIJE uspjesno registrovan!");
-                                res.status(500);
-                                //res.redirect('/register');
-                            }
+router.post('/user', function (req, res, next) {
+    const ime = req.body.ime;
+    const prezime = req.body.prezime;
+    const email = req.body.email;
+    const plaintext_password = req.body.password;
 
-                        );
-                    });
-                });
-            }
-        },
-        (err) => {
-            console.log(err);
-            res.status(500);
+    const tip = 3;
+
+    hashPassword(plaintext_password).then(
+        (hash) => {
+            return hash;
         }
-    );
+    ).then(
+        (hash) => {
+            return db_funkcije.dodajKorisnika(ime, prezime, email, hash, tip);
+        }
+    ).then((result) => {
+        console.log(ime, prezime, " uspjesno registrovan");
+        res.send("Uspjesno");
+    }).catch((error) => {
+        console.error("Korisnik sa istim emailom postoji u bazi!");
+        //console.log(error);
+        res.send("Fail"); // zamjeni sa redirektom
+    });
+
+
 });
 
-router.post('/trgovina', function(req, res, next) {
-  const username = req.body.naziv_trgovine;
-    const password = req.body.password_trgovine;
-    const email = req.body.email_trgovine;
-    let tip = 1;
-    
-    db_funkcije.getKorisnik(username, email).then(
-        (result) => {
-            if(result.length != 0)
-                res.status(406).json({ error: 'username/email' });
-            else{
-                const saltRounds = 10;
-                const myPlaintextPassword = password;
-                bcrypt.genSalt(saltRounds, function(err, salt) {
-                    bcrypt.hash(myPlaintextPassword, salt, function(err, hash) {
-                        db_funkcije.sacuvajNovogKorisnika(username, hash, email, tip).then(
-                            ()=> {
-                                console.log("Novi korisnik uspjesno registrovan!");
-                                //res.redirect('/login')
-                                res.status(200);
-                            },
-                            (error) => {
-                                console.log(error);
-                                console.log("Novi korisnik NIJE uspjesno registrovan!");
-                                res.status(500);
-                                //res.redirect('/register');
-                            }
+router.post('/trgovina', function (req, res, next) {
+    const ime = req.body.ime;
+    const prezime = req.body.prezime;
+    const email = req.body.email;
+    const plaintext_password = req.body.password;
+    const naziv_trgovine = req.body.naziv_trgovine;
 
-                        );
-                    });
-                });
-            }
-        },
-        (err) => {
-            console.log(err);
-            res.status(500);
+    const tip = 2;
+
+    hashPassword(plaintext_password).then(
+        (hash) => {
+            return hash;
         }
-    );
+    ).then((hash) => {
+        return db_funkcije.dodajKorisnika(ime, prezime, email, hash, tip);
+    }
+    ).then(() => {
+        return db_funkcije.getKorisnik(email);
+    }).then((result) => {
+
+        db_funkcije.dodajTrgovinu(naziv_trgovine, result[0].id);
+        console.log("Trgovac uspjesno registrovan");
+        res.send("Trgovac uspjesno registrovan");
+    }).catch((error) => {
+        console.error("Trgovac sa istim emailom postoji u bazi!");
+        console.log(error);
+        res.send("Fail"); // zamjeni sa redirektom
+    });
+
 });
 
 module.exports = router;
