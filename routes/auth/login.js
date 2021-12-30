@@ -12,25 +12,23 @@ const JWT_TOKEN = process.env.JWT_TOKEN_SECRET;
 
 /* Generise JWT token, default vrijeme trajanja tokena je 12h, ako je korisnik 
 čekirao "Zapamti me" onda je vrijeme trajanja 30 dana */
-const generisiToken = (id, ime, prezime, tip_korisnika, email, remember_me, JWT_TOKEN) => {
+const generisiToken = (korisnik, JWT_TOKEN) => {
     let duzina_trajanja = { expiresIn: '3600s' };
     if (remember_me != undefined) {
         duzina_trajanja.expiresIn = '30d';
     }
-    return jwt.sign({ id: id, ime: ime, prezime: prezime, email: email, tip_korisnika: tip_korisnika }, JWT_TOKEN, { expiresIn: duzina_trajanja });
+    return jwt.sign(korisnik, JWT_TOKEN, duzina_trajanja);
 }
-
-// almir.a@gmail.ba
-// almir321
+// almir.handabaka@gmail.com    almir123
+// almir.a@gmail.ba   almir321
 /* Auth logina i dodjela JWT tokena */
 router.post('/', function (req, res, next) {
     const email = req.body.email;
     const password = req.body.password;
     const remember_me = req.body.rememberme;
-    console.log(remember_me);
 
-    if (Object.keys(req.body).length < 3) {
-        console.log("Losi paramteri");
+    if (Object.keys(req.body).length < 2) {
+        console.log("Losi parametri");
         res.status(406).end('username/password');
     } else {
         db_funkcije.getKorisnik(email).then(
@@ -43,10 +41,11 @@ router.post('/', function (req, res, next) {
                         console.log(err);
                     }
                     else if (result && result != undefined) {
-                        const token = generisiToken(result1[0].id, result1[0].ime, result1[0].prezime, result1[0].tip_korisnika, result1[0].email, remember_me, JWT_TOKEN);
+                        const korisnik = { id: result1[0].id, ime: result1[0].ime, prezime: result1[0].prezime, tip: result1[0].tip_korisnika, email: result1[0].email };
+                        const token = generisiToken(korisnik, remember_me, JWT_TOKEN);
                         //console.log(token);
                         res.cookie('authToken', token);
-                        res.cookie('userName', result1[0].username);
+                        //res.cookie('userName', result1[0].username);
                         res.status(200).json({ token: token });
                     }
                     else if (result1.length != 0) {
@@ -67,5 +66,12 @@ router.post('/', function (req, res, next) {
 
     }
 });
+
+// izbrisati token
+router.get('/logout', function (req, res, next) {
+    res.clearCookie("authToken");
+    res.sendStatus(200);
+});
+
 
 module.exports = router;

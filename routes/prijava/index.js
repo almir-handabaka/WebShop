@@ -3,6 +3,7 @@ var router = express.Router();
 
 /* GET login/register stranicu */
 router.get('/', function (req, res, next) {
+  console.log(req.headers.cookie);
   res.render('prijava/index', { title: 'Web Shop' });
   //res.render('administrator/test', { title: 'Web Shop' });
 });

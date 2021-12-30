@@ -51,7 +51,7 @@ const naziv_trgovine = "Miralkov Kutak";
 
 /* Dashboard za prodavnicu */
 router.get('/', function (req, res, next) {
-    res.render('trgovina', { title: 'Web Shop - ' + naziv_trgovine, naziv_trgovine: naziv_trgovine, artikli: artikli });
+    res.render('trgovina/trgovina', { title: 'Web Shop - ' + naziv_trgovine, naziv_trgovine: naziv_trgovine, artikli: artikli });
 });
 
 /* Ruta za brisanje artikla */
@@ -200,7 +200,7 @@ router.get('/narudzbe', function (req, res, next) {
     let id_artikla = req.body.id;
     const now = new Date();
     const ptime = date.format(now, 'YYYY/MM/DD HH:mm:ss');
-    res.render('narudzbe', { datum: ptime, narudzbe: narudzbe })
+    res.render('trgovina/narudzbe', { datum: ptime, narudzbe: narudzbe })
 });
 
 /* Postavke trgovine  -  Za svaku trgovinu znamo naziv, kontakt telefon i e-mail, adresu sjedišta i drugih poslovnica (naziv ulice i grad), kategoriju/kategorije usluga i druge podatke.   */
@@ -212,15 +212,13 @@ const trgovina = {
     grad: "Sarajevo",
     adresa: "Gornji Velesici do 130",
     sifra: "almir123456",
-
-
 }
 
 router.get('/postavke', function (req, res, next) {
     let id_artikla = req.body.id;
     const now = new Date();
     const ptime = date.format(now, 'YYYY/MM/DD HH:mm:ss');
-    res.render('postavke', { datum: ptime, trgovina: trgovina })
+    res.render('trgovina/postavke', { datum: ptime, trgovina: trgovina })
 });
 
 const upload = multer({ dest: './public/data/uploads/' });

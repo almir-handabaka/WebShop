@@ -9,7 +9,7 @@ const { loginRouter, registerRouter } = require('./routes/auth');
 
 var indexRouter = require('./routes/prijava');
 //var naslovnaRouter = require('./routes/naslovna');
-//var trgovinaRouter = require('./routes/trgovina');
+var trgovinaRouter = require('./routes/trgovina');
 var authRouter = require('./routes/auth');
 
 var app = express();
@@ -28,7 +28,7 @@ app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 //app.use('/naslovna', naslovnaRouter);
-//app.use('/trgovina', trgovinaRouter);
+app.use('/trgovina', trgovinaRouter);
 
 
 // catch 404 and forward to error handler

@@ -21,9 +21,9 @@ var db_funkcije = {
         })
     },
 
-    dodajKorisnika: (ime, prezime, email, password_hash, tip) => {
+    dodajKorisnika: (korisnik, password_hash) => {
         return new Promise((resolve, reject) => {
-            pool.query('insert into korisnici (ime, prezime, email, password_hash, tip_korisnika) values($1, $2, $3, $4, $5)', [ime, prezime, email, password_hash, tip], (err, result) => {
+            pool.query('insert into korisnici (ime, prezime, email, password_hash, tip_korisnika) values($1, $2, $3, $4, $5)', [korisnik.ime, korisnik.prezime, korisnik.email, password_hash, korisnik.tip], (err, result) => {
                 if (err) {
                     return reject(err);
                 }
@@ -70,27 +70,35 @@ const hashPassword = (plaintext_password) => {
 */
 
 router.post('/user', function (req, res, next) {
-    const ime = req.body.ime;
-    const prezime = req.body.prezime;
-    const email = req.body.email;
-    const plaintext_password = req.body.password;
-
     const tip = 3;
+    const korisnik = {
+        ime: req.body.ime,
+        prezime: req.body.prezime,
+        email: req.body.email,
+        plaintext_password: req.body.password,
+        tip: tip,
+    }
+    // const ime = req.body.ime;
+    // const prezime = req.body.prezime;
+    // const email = req.body.email;
+    // const plaintext_password = req.body.password;
 
-    hashPassword(plaintext_password).then(
+
+
+    hashPassword(korisnik.plaintext_password).then(
         (hash) => {
             return hash;
         }
     ).then(
         (hash) => {
-            return db_funkcije.dodajKorisnika(ime, prezime, email, hash, tip);
+            return db_funkcije.dodajKorisnika(korisnik, hash);
         }
     ).then((result) => {
-        console.log(ime, prezime, " uspjesno registrovan");
+        console.log(korisnik.ime, korisnik.prezime, " uspjesno registrovan");
         res.send("Uspjesno");
     }).catch((error) => {
         console.error("Korisnik sa istim emailom postoji u bazi!");
-        //console.log(error);
+        console.log(error);
         res.send("Fail"); // zamjeni sa redirektom
     });
 
@@ -98,26 +106,35 @@ router.post('/user', function (req, res, next) {
 });
 
 router.post('/trgovina', function (req, res, next) {
-    const ime = req.body.ime;
-    const prezime = req.body.prezime;
-    const email = req.body.email;
-    const plaintext_password = req.body.password;
-    const naziv_trgovine = req.body.naziv_trgovine;
-
     const tip = 2;
+    const korisnik = {
+        ime: req.body.ime,
+        prezime: req.body.prezime,
+        email: req.body.email,
+        plaintext_password: req.body.password,
+        naziv_trgovine: req.body.naziv_trgovine,
+        tip: tip,
+    }
+    console.log(korisnik);
+    // const ime = req.body.ime;
+    // const prezime = req.body.prezime;
+    // const email = req.body.email;
+    // const plaintext_password = req.body.password;
+    // const naziv_trgovine = req.body.naziv_trgovine;
 
-    hashPassword(plaintext_password).then(
+
+
+    hashPassword(korisnik.plaintext_password).then(
         (hash) => {
             return hash;
         }
     ).then((hash) => {
-        return db_funkcije.dodajKorisnika(ime, prezime, email, hash, tip);
+        return db_funkcije.dodajKorisnika(korisnik, hash);
     }
     ).then(() => {
-        return db_funkcije.getKorisnik(email);
+        return db_funkcije.getKorisnik(korisnik.email);
     }).then((result) => {
-
-        db_funkcije.dodajTrgovinu(naziv_trgovine, result[0].id);
+        db_funkcije.dodajTrgovinu(korisnik.naziv_trgovine, result[0].id);
         console.log("Trgovac uspjesno registrovan");
         res.send("Trgovac uspjesno registrovan");
     }).catch((error) => {

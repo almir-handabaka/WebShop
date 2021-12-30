@@ -7,6 +7,6 @@ var trgovinaRouter = require('./trgovina');
 var grafoviRouter = require('./grafovi');
 
 module.exports = trgovinaRouter;
-module.exports = grafoviRouter;
+//module.exports = grafoviRouter;
 
 
