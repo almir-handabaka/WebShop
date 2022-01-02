@@ -12,7 +12,7 @@ const JWT_TOKEN = process.env.JWT_TOKEN_SECRET;
 
 /* Generise JWT token, default vrijeme trajanja tokena je 12h, ako je korisnik 
 čekirao "Zapamti me" onda je vrijeme trajanja 30 dana */
-const generisiToken = (korisnik, JWT_TOKEN) => {
+const generisiToken = (korisnik, remember_me, JWT_TOKEN) => {
     let duzina_trajanja = { expiresIn: '3600s' };
     if (remember_me != undefined) {
         duzina_trajanja.expiresIn = '30d';

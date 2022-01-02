@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var date = require('date-and-time');
 var multer = require('multer');
+const { db_funkcije } = require('.././database/index.js');
 
 const artikli = [
     {
