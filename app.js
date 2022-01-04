@@ -38,7 +38,7 @@ app.use(function (req, res, next) {
   var decoded;
   dotenv.config();
   const JWT_TOKEN = process.env.JWT_TOKEN_SECRET;
-
+  return next();
 
   //---------------------
   /*

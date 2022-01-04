@@ -33,6 +33,7 @@
     <!-- Custom styles for this template -->
     <link href="stylesheets/dashboard.css" rel="stylesheet">
     <script src="javascripts/dashboard.js"></script>
+    <script src="javascripts/trgovina.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
@@ -128,8 +129,9 @@
                     <h1 class="h2"></h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
 
-                        <button type="button" class="btn btn-sm btn-outline-success" data-bs-toggle="modal"
-                            data-bs-target="#staticBackdropUrediArtikal" onclick="srediModal('', '', '')">
+                        <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal"
+                            data-bs-target="#staticBackdropUrediArtikal"
+                            onclick="srediModal('', 'Dodaj artikal', 'dodaj')">
                             <span data-feather="calendar"></span>
                             Dodaj Novi artikal
                         </button>
@@ -157,25 +159,26 @@
                                         <%= i + 1 %>
                                     </td>
                                     <td>
-                                        <%= artikli[i].naziv %>
+                                        <%= artikli[i].naziv_artikla %>
                                     </td>
                                     <td>
-                                        <%= artikli[i].kategorija %>
+                                        <%= artikli[i].naziv_kategorije %>
                                     </td>
                                     <td>
                                         <%= artikli[i].cijena %> KM
                                     </td>
                                     <td>
-                                        <div class="btn-group me-2">
-                                            <button type="button" class="btn btn-sm btn-outline-warning"
-                                                onclick="srediModal(` <%= artikli[i].naziv %>, <%= artikli[i].kategorija %>, <%= artikli[i].cijena %>  `)"
+                                        <div class="btn-group me-2 col-6 mx-auto">
+                                            <button type="button" class="btn btn-sm btn-warning"
+                                                onclick="srediModal( '<%= JSON.stringify(artikli[i] )%>', 'Uredi artikal', 'edit'  )"
                                                 data-bs-toggle="modal" data-bs-target="#staticBackdropUrediArtikal">
                                                 <span data-feather="calendar"></span>
                                                 Uredi
                                             </button>
-                                            <button type="button" class="btn btn-sm btn-outline-danger">
+                                            <button type="button" class="btn btn-sm btn-danger"
+                                                onclick="izbrisiArtikal('<%=artikli[i].id_artikla%>')">
                                                 <span data-feather="calendar"></span>
-                                                Ukloni
+                                                Izbriši
                                             </button>
                                         </div>
                                     </td>
@@ -202,21 +205,22 @@
                 <div class="modal-body">
                     <form>
                         <div class="mb-3">
-                            <label for="recipient-name" class="col-form-label">Naziv:</label>
-                            <input type="text" class="form-control" id="recipient-name1">
+                            <label for="naziv" class="col-form-label">Naziv:</label>
+                            <input type="text" class="form-control" id="naziv" name="naziv">
                         </div>
                         <div class="row">
                             <div class="mb-3 col">
                                 <label for="cijena" class="col-form-label">Cijena:</label>
-                                <input type="text" class="form-control" id="cijena">
+                                <input type="text" class="form-control" id="cijena" name="cijena">
                             </div>
                             <div class="mb-3 col">
-                                <label for="recipient-name" class="col-form-label">Kolicina:</label>
-                                <input type="text" class="form-control" id="recipient-name" value="1">
+                                <label for="kolicina" class="col-form-label">Kolicina:</label>
+                                <input type="text" class="form-control" id="kolicina" value="1" name="kolicina">
                             </div>
                             <div class="mb-3 col">
-                                <label for="recipient-name" class="col-form-label">Stanje:</label>
-                                <select class="form-select form-select-sm" aria-label=".form-select-sm example">
+                                <label for="stanje" class="col-form-label">Stanje:</label>
+                                <select id="stanje" class="form-select form-select-sm"
+                                    aria-label=".form-select-sm example" name="stanje">
                                     <option value="1">Novo</option>
                                     <option value="2">Korišteno</option>
                                 </select>
@@ -224,66 +228,43 @@
                         </div>
                         <div class="row">
                             <div class="mb-3 col">
-                                <label for="recipient-name" class="col-form-label">Kategorija:</label>
-                                <input type="text" class="form-control" id="recipient-name">
+                                <label for="kategorija" class="col-form-label">Kategorija:</label>
+                                <select id="kategorija" name="kategorija" class="form-select form-select-sm"
+                                    aria-label=".form-select-sm example">
+
+                                </select>
                             </div>
                             <div class="mb-3 col">
-                                <label for="recipient-name" class="col-form-label">Lokacija:</label>
-                                <input type="text" class="form-control" id="recipient-name">
+                                <label for="lokacija" class="col-form-label">Lokacija:</label>
+
+                                <select id="lokacija" class="form-select form-select-sm"
+                                    aria-label=".form-select-sm example" name="lokacija">
+
+                                </select>
                             </div>
 
                         </div>
                         <div class="mb-3">
-                            <label for="message-text" class="col-form-label">Opis:</label>
-                            <textarea class="form-control" id="message-text"></textarea>
+                            <label for="opis" class="col-form-label">Opis:</label>
+                            <textarea class="form-control" id="opis" name="opis"></textarea>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zatvori</button>
-                    <button type="button" class="btn btn-primary">Sačuvaj</button>
+                    <button id="sacuvajDugme" type="button" class="btn btn-primary"
+                        onclick="dodajArtikal()">Sačuvaj</button>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        const srediModal = (naziv, kategorija, cijena) => {
-            $("#recipient-name1").val(naziv);
-            $("#cijena").val(cijena);
-            //$("#recipient-name").val(naziv);
-        }
-
-        const izbrisiArtikal = (id_artikla) => {
-            $.post("/trgovina/delete/",
-                {
-                    id: id_artikla,
-                },
-                function (data, status) {
-                    alert("Artikal uspjesno izbrisan");
-                });
-        }
-
-        const getHtml = (nav_item) => {
-            let ruta;
-            if (nav_item === 'narudzbe') {
-                ruta = "/trgovina/narudzbe";
-            }
-            else if (nav_item === 'postavke') {
-                ruta = "/trgovina/postavke";
-            }
-            $.get(ruta,
-                function (data, status) {
-                    //console.log(data);
-                    $("#main").html(data);
-                });
-
-        }
-
-
+        var kategorije;
+        var lokacije;
+        var t_lokacija;
+        var id_artikla = 0;
     </script>
-
-
 </body>
 
 </html>
