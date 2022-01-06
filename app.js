@@ -7,6 +7,7 @@ var dotenv = require('dotenv');
 var jwt = require('jsonwebtoken');
 
 const { loginRouter, registerRouter } = require('./routes/auth');
+const { pocetna_stranica } = require('./routes/kupac');
 
 
 var indexRouter = require('./routes/prijava');
@@ -114,12 +115,12 @@ app.use(function (req, res, next) {
 });
 
 
-
 app.use('/', indexRouter);
 app.use('/login', loginRouter);
 app.use('/register', registerRouter);
 //app.use('/naslovna', naslovnaRouter);
 app.use('/trgovina', trgovinaRouter);
+app.use('/pocetna', pocetna_stranica);
 
 
 // catch 404 and forward to error handler

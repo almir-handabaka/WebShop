@@ -18,7 +18,6 @@ var pool = new Pool({
     database: process.env.database,
     password: process.env.password,
     port: process.env.dbport,
-    rowMode: 'array'
     //max: 10, // set pool max size to 10
     //idleTimeoutMillis: 1000, // close idle clients after 1 second
     //connectionTimeoutMillis: 1000,

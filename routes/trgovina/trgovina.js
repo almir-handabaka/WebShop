@@ -135,7 +135,7 @@ router.post('/delete', function (req, res, next) {
 
 */
 router.get('/narudzbe', function (req, res, next) {
-    let id_artikla = req.body.id;
+
     const now = new Date();
     const ptime = date.format(now, 'YYYY/MM/DD HH:mm:ss');
     res.render('trgovina/narudzbe', { datum: ptime, narudzbe: narudzbe })
@@ -153,7 +153,7 @@ const trgovina = {
 }
 
 router.get('/postavke', function (req, res, next) {
-    let id_artikla = req.body.id;
+
     const now = new Date();
     const ptime = date.format(now, 'YYYY/MM/DD HH:mm:ss');
     res.render('trgovina/postavke', { datum: ptime, trgovina: trgovina })
