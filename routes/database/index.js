@@ -18,10 +18,11 @@ var pool = new Pool({
     database: process.env.database,
     password: process.env.password,
     port: process.env.dbport,
-    //max: 10, // set pool max size to 10
-    //idleTimeoutMillis: 1000, // close idle clients after 1 second
-    //connectionTimeoutMillis: 1000,
+    max: 3, // set pool max size to 10
+    idleTimeoutMillis: 1000, // close idle clients after 1 second
+    connectionTimeoutMillis: 1000,
 });
+
 
 exports.db_funkcije = {
     getKorisnik: (email) => {
@@ -42,12 +43,13 @@ exports.db_funkcije = {
         const { trgovina_id, kategorija_id, naziv, opis, lokacija, stanje, cijena, kolicina } = artikal;
 
         return new Promise((resolve, reject) => {
-            pool.query('insert into artikli (trgovina_id, kategorija_id, naziv_artikla, opis_artikla, lokacija, stanje, cijena, kolicina) values($1, $2, $3, $4, $5, $6, $7, $8)', [trgovina_id, kategorija_id, naziv, opis, lokacija, stanje, cijena, kolicina], (err, result) => {
+            pool.query('insert into artikli (trgovina_id, kategorija_id, naziv_artikla, opis_artikla, lokacija, stanje, cijena, kolicina) values($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id_artikla', [trgovina_id, kategorija_id, naziv, opis, lokacija, stanje, cijena, kolicina], (err, result) => {
                 if (err) {
                     return reject(err);
                 }
+
                 //console.log(result.rows);
-                return resolve();
+                return resolve(result.rows[0].id_artikla);
             })
         })
     },
@@ -115,6 +117,44 @@ exports.db_funkcije = {
             })
         })
     },
+
+    sacuvajFotografije: (fotografije, id_artikla) => {
+        let upit = "INSERT INTO fotografije_artikala (naziv_fotografije, id_artikla)VALUES";
+        console.log("Dodavanje fotografije");
+        for (let i = 0; i < fotografije.length; i++) {
+            upit += `($${i + 1}, ${id_artikla})`;
+            if (i != fotografije.length - 1) {
+                upit += ",";
+            }
+        }
+        upit += ';';
+        console.log(upit);
+        return new Promise((resolve, reject) => {
+            pool.query(upit, fotografije, (err, result) => {
+                if (err) {
+                    console.log("Fotografija neupsjesno dodata");
+                    return reject(err);
+                }
+                console.log("Fotografija uspjesno dodata");
+                return resolve();
+            })
+        })
+    },
+
+    dohvatiFotografije: (id_artikla) => {
+        return new Promise((resolve, reject) => {
+            pool.query("select * from  fotografije_artikala where id_artikla = $1", [id_artikla], (err, result) => {
+                if (err) {
+                    console.log("Error pri dohvacanju fotografija!");
+                    return reject(err);
+                }
+                console.log("Fotografije uspjesno dohvacene!");
+                return resolve(result.rows);
+            })
+        })
+    },
+
+
 
 
 };

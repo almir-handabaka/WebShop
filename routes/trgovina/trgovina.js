@@ -3,6 +3,38 @@ var router = express.Router();
 var date = require('date-and-time');
 var multer = require('multer');
 const { db_funkcije } = require('.././database/index.js');
+var path = require('path');
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './public/data/uploads/')
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9) + path.extname(file.originalname);
+        cb(null, uniqueSuffix);
+        if (req.fotografije === undefined) {
+            req.fotografije = [];
+        }
+        req.fotografije.push(uniqueSuffix);
+    }
+});
+
+const upload = multer({
+    storage: storage,
+    fileFilter: function (req, file, callback) {
+        var ext = path.extname(file.originalname);
+        if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg') {
+            console.log("Nije slika");
+            return callback(new Error('Only images are allowed'))
+        }
+        callback(null, true)
+    },
+    limits: {
+        fileSize: 1024 * 1024
+    },
+});
+
+
 
 const artikli = [
     {
@@ -60,13 +92,15 @@ router.get('/', function (req, res, next) {
     }).catch((error) => {
         console.log(error);
         res.sendStatus(404);
-    })
+    });
 
 });
 
+
 /* Ruta za dodavanje artikla */
-router.post('/dodaj_artikal', function (req, res, next) {
-    console.log("Dodaj");
+router.post('/dodaj_artikal', /*upload.array("file", 12)*/ upload.any(), function (req, res, next) {
+    console.log("Dodavanje artikla sa slikama");
+    console.log(req.fotografije);
     var artikal = {
         trgovina_id: 3,
         naziv: req.body.naziv,
@@ -77,14 +111,19 @@ router.post('/dodaj_artikal', function (req, res, next) {
         lokacija: req.body.lokacija,
         opis: req.body.opis,
     };
-    console.log(artikal);
+    //console.log(artikal);
 
-    db_funkcije.dodajArtikal(artikal).then(() => {
+    db_funkcije.dodajArtikal(artikal).then((id_artikla) => {
+        if (req.fotografije != undefined)
+            return db_funkcije.sacuvajFotografije(req.fotografije, id_artikla);
+    }).then(() => {
         res.sendStatus(200);
     }).catch((error) => {
         console.log(error);
         res.sendStatus(404);
     });
+
+
 
 });
 
@@ -153,15 +192,17 @@ const trgovina = {
 }
 
 router.get('/postavke', function (req, res, next) {
-
     const now = new Date();
     const ptime = date.format(now, 'YYYY/MM/DD HH:mm:ss');
     res.render('trgovina/postavke', { datum: ptime, trgovina: trgovina })
 });
 
-const upload = multer({ dest: './public/data/uploads/' });
+
+
+
+//const upload = multer({ dest: './public/data/uploads/' });
 router.post('/profilna', upload.single('avatar'), function (req, res, next) {
-    console.log(req.file, req.body);
+
     res.send("Okej");
     // req.file is the `avatar` file
     // req.body will hold the text fields, if there were any
@@ -190,7 +231,16 @@ router.get('/poslovnice', function (req, res, next) {
 
 });
 
+router.get('/fotografije/:id_artikla', function (req, res, next) {
+    let id_artikla = req.params.id_artikla;
+    db_funkcije.dohvatiFotografije(id_artikla).then((result) => {
+        res.json(result);
+    }).catch((error) => {
+        console.log(error);
+        res.sendStatus(404);
+    })
 
+});
 
 
 module.exports = router;

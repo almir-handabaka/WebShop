@@ -22,6 +22,7 @@ const srediModal = (artikal, naslov_modala, akcija) => {
         $("#kategorija").val(artikal.id_kategorije);
         $("#lokacija").val(artikal.id);
         $("#opis").val(artikal.opis_artikla);
+        $('#inputGroupFile01').val("");
         t_lokacija = artikal.id;
         id_artikla = artikal.id_artikla;
     }
@@ -33,6 +34,7 @@ const srediModal = (artikal, naslov_modala, akcija) => {
         $("#kategorija").val(9);
         $("#lokacija").val(1);
         $("#opis").val("");
+        $('#inputGroupFile01').val("");
         t_lokacija = 1;
     }
 
@@ -77,6 +79,7 @@ const dohvatiLokacije = () => {
         });
 }
 
+
 // funkcija dodaje/uredjuje artikal
 const dodajArtikal = (akcija) => {
     let ruta = "/trgovina/dodaj_artikal";
@@ -84,8 +87,49 @@ const dodajArtikal = (akcija) => {
         ruta = "/trgovina/uredi_artikal";
     }
 
-    console.log($("#naziv").val());
-    $.post(ruta,
+    var fd = new FormData();
+    var files = $('#inputGroupFile01')[0].files;
+
+    let lista = [];
+    for (let i = 0; i < files.length; i++) {
+        fd.append("file", files[i], files[i].name);
+
+    }
+    console.log("Kategorija ", $("#kategorija").val());
+    let data = {
+        naziv: $("#naziv").val(),
+        cijena: $("#cijena").val(),
+        kolicina: $("#kolicina").val(),
+        stanje: $("#stanje").val(),
+        kategorija: $("#kategorija").val(),
+        lokacija: $("#lokacija").val(),
+        opis: $("#opis").val(),
+        id_artikla: id_artikla,
+    };
+
+    for (const property in data) {
+        fd.append(property.toString(), data[property]);
+    }
+
+    $.ajax({
+        url: ruta,
+        type: 'post',
+        data: fd,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            if (response != 0) {
+                console.log("Okej upload");
+            } else {
+                alert('file not uploaded');
+            }
+        },
+    });
+
+
+
+    /* $.post(ruta,
+        fd,
         {
             naziv: $("#naziv").val(),
             cijena: $("#cijena").val(),
@@ -95,7 +139,9 @@ const dodajArtikal = (akcija) => {
             lokacija: $("#lokacija").val(),
             opis: $("#opis").val(),
             id_artikla: id_artikla,
+            slike: fileUpload,
         },
+
         function (data, status) {
 
             if (status == 'success') {
@@ -107,10 +153,21 @@ const dodajArtikal = (akcija) => {
                 // doslo je do greske
             }
 
-        });
+        }); */
 }
 
+const dohvatiFotografije = () => {
 
+    $.get("/trgovina/fotografije/" + id_artikla,
+        function (data, status) {
+            for (let i = 0; i < data.length; i++) {
+                $("#uplFotografije").append(`<div class="col-3 mt-1 position-relative"><button type="button" class="btn-close position-absolute" style="right:25px;" aria-label="Close" ></button>
+                <img  src="data/uploads/${data[i].naziv_fotografije}" alt="Sorry! Image not available at this time" class="w-100" />
+                </div>`);
+            }
+        });
+
+}
 
 const izbrisiArtikal = (id_artikla) => {
     $.post("/trgovina/delete",

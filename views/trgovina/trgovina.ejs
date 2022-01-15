@@ -13,7 +13,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
-
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -203,7 +203,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form>
+                    <form id="data" method="post" action="/trgovina/dodaj_artikal" enctype="multipart/form-data">
                         <div class="mb-3">
                             <label for="naziv" class="col-form-label">Naziv:</label>
                             <input type="text" class="form-control" id="naziv" name="naziv">
@@ -248,12 +248,46 @@
                             <label for="opis" class="col-form-label">Opis:</label>
                             <textarea class="form-control" id="opis" name="opis"></textarea>
                         </div>
+                        <div class="mb-3">
+
+                            <label for="fotografija" class="col-form-label">Dodajte fotografiju</label>
+                            <div class="input-group mb-4">
+                                <input type="file" accept='image/*' name='slike_artikla' multiple class="form-control"
+                                    id="inputGroupFile01">
+
+                            </div>
+
+
+                        </div>
+
+                        <div class="accordion" id="accordionExample">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"
+                                        onclick="dohvatiFotografije()">
+                                        Fotografije
+                                    </button>
+                                </h2>
+
+                                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
+                                    data-bs-parent="#accordionExample">
+                                    <div class="accordion-body">
+                                        <div id="uplFotografije" class="row py-3 shadow-5">
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zatvori</button>
+                                <button id="sacuvajDugme" type="button" class="btn btn-primary"
+                                    onclick="dodajArtikal('add')">Sačuvaj</button>
+                            </div>
                     </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zatvori</button>
-                    <button id="sacuvajDugme" type="button" class="btn btn-primary"
-                        onclick="dodajArtikal()">Sačuvaj</button>
                 </div>
             </div>
         </div>
