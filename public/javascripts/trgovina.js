@@ -1,3 +1,11 @@
+var kategorije;
+var lokacije;
+var t_lokacija;
+var id_artikla = 0;
+var dohvaceneFotografije = false;
+
+
+
 const srediModal = (artikal, naslov_modala, akcija) => {
     if (akcija === 'edit') {
         artikal = JSON.parse(artikal);
@@ -25,6 +33,14 @@ const srediModal = (artikal, naslov_modala, akcija) => {
         $('#inputGroupFile01').val("");
         t_lokacija = artikal.id;
         id_artikla = artikal.id_artikla;
+        $('#uplFotografije').html("");
+        $('#accordionExample').show();
+        if ($('.accordion-button').attr("aria-expanded") === "true") {
+            $('.accordion-button').click();
+        }
+
+
+
     }
     else {
         $("#naziv").val("");
@@ -35,9 +51,10 @@ const srediModal = (artikal, naslov_modala, akcija) => {
         $("#lokacija").val(1);
         $("#opis").val("");
         $('#inputGroupFile01').val("");
+        $('#accordionExample').hide();
         t_lokacija = 1;
     }
-
+    dohvaceneFotografije = false;
     //$("#recipient-name").val(naziv);
 }
 
@@ -157,16 +174,28 @@ const dodajArtikal = (akcija) => {
 }
 
 const dohvatiFotografije = () => {
+    if (!dohvaceneFotografije)
+        $.get("/trgovina/fotografije/" + id_artikla,
+            function (data, status) {
+                for (let i = 0; i < data.length; i++) {
+                    $("#uplFotografije").append(`<div id="ft${data[i].id}" class="col-3 mt-1 position-relative"><button type="button" class="btn-close position-absolute" style="right:25px;" aria-label="Close" onclick="izbrisiFotografiju(${data[i].id})"></button>
+                    <img  src="data/uploads/${data[i].naziv_fotografije}" alt="Sorry! Image not available at this time" class="w-100" />
+                    </div>`);
+                }
+            });
+    dohvaceneFotografije = true;
+}
 
-    $.get("/trgovina/fotografije/" + id_artikla,
+const izbrisiFotografiju = (foto_id) => {
+    $.post("/trgovina/fotografija/delete",
+        {
+            foto_id: foto_id,
+        },
         function (data, status) {
-            for (let i = 0; i < data.length; i++) {
-                $("#uplFotografije").append(`<div class="col-3 mt-1 position-relative"><button type="button" class="btn-close position-absolute" style="right:25px;" aria-label="Close" ></button>
-                <img  src="data/uploads/${data[i].naziv_fotografije}" alt="Sorry! Image not available at this time" class="w-100" />
-                </div>`);
-            }
+            console.log(status);
+            if (status)
+                $('#ft' + foto_id).hide();
         });
-
 }
 
 const izbrisiArtikal = (id_artikla) => {
@@ -175,7 +204,9 @@ const izbrisiArtikal = (id_artikla) => {
             id: id_artikla,
         },
         function (data, status) {
-            console.log("Artikal uspjesno izbrisan");
+            console.log(status);
+            if (status)
+                $('#' + id_artikla).hide();
         });
 }
 

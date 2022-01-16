@@ -159,8 +159,12 @@ router.post('/delete', function (req, res, next) {
     let id_artikla = req.body.id;
     db_funkcije.izbrisiArtikal(id_artikla).then(() => {
         console.log(`Artikal id ${id_artikla} uspjesno izbrisan`);
-    })
-    // funkcija koja brise artikal iz tabele
+        res.sendStatus(200);
+    }).catch((error) => {
+        console.log(error);
+        res.sendStatus(404);
+    });
+
 });
 
 
@@ -192,9 +196,16 @@ const trgovina = {
 }
 
 router.get('/postavke', function (req, res, next) {
-    const now = new Date();
-    const ptime = date.format(now, 'YYYY/MM/DD HH:mm:ss');
-    res.render('trgovina/postavke', { datum: ptime, trgovina: trgovina })
+    db_funkcije.dohvatiPodatkeOTrgovini(3).then((result) => {
+        console.log(result);
+        res.render('trgovina/postavke', { data: result });
+    }).catch((error) => {
+        console.log(error);
+        res.sendStatus(404);
+    })
+
+
+
 });
 
 
@@ -235,6 +246,7 @@ router.get('/fotografije/:id_artikla', function (req, res, next) {
     let id_artikla = req.params.id_artikla;
     db_funkcije.dohvatiFotografije(id_artikla).then((result) => {
         res.json(result);
+        //console.log(result);
     }).catch((error) => {
         console.log(error);
         res.sendStatus(404);
@@ -242,5 +254,39 @@ router.get('/fotografije/:id_artikla', function (req, res, next) {
 
 });
 
+router.post('/fotografija/delete', function (req, res, next) {
+    let foto_id = req.body.foto_id;
+
+    db_funkcije.izbrisiFotografiju(foto_id).then(() => {
+        console.log("Fotografija izbrisana!");
+        res.sendStatus(200);
+    }).catch((error) => {
+        console.log(error);
+        res.sendStatus(404);
+    })
+
+});
+
+router.get('/narudzbe/aktivne', function (req, res, next) {
+    db_funkcije.dohvatiAktivneNarudzbe(3).then((result) => {
+        console.log(result);
+        res.render('trgovina/aktivne_narudzbe', { artikli: result, title: "Aktivne narudzbe" });
+    }).catch((error) => {
+        console.log(error);
+        res.sendStatus(404);
+    });
+
+});
+
+
+router.get('/narudzbe/evidencija', function (req, res, next) {
+    db_funkcije.dohvatiSveNarudzbe(3).then((result) => {
+        res.render('trgovina/evidencija_narudzbi', { artikli: result, title: "Evidencija narudžbi" });
+    }).catch((error) => {
+        console.log(error);
+        res.sendStatus(404);
+    });
+
+});
 
 module.exports = router;

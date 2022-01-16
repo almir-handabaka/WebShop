@@ -14,291 +14,226 @@
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="stylesheets/trgovac.css" rel="stylesheet">
     <style>
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
-        }
 
-        @media (min-width: 768px) {
-            .bd-placeholder-img-lg {
-                font-size: 3.5rem;
-            }
-        }
     </style>
 
     <!-- Custom styles for this template -->
-    <link href="stylesheets/dashboard.css" rel="stylesheet">
-    <script src="javascripts/dashboard.js"></script>
     <script src="javascripts/trgovina.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 
-<body>
-    <header class="navbar navbar-dark bg-dark sticky-top  flex-md-nowrap p-0 shadow">
-        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">
-            <%= naziv_trgovine %>
-        </a>
-        <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
-            data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
-            aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
-        <div class="navbar-nav">
-            <div class="nav-item text-nowrap">
-                <a class="nav-link px-3" href="#">Sign out</a>
-            </div>
-        </div>
-    </header>
+<body class="purple">
+    <%- include('../partials/trgovac_hm.ejs') %>
 
-    <div class="container-fluid">
-        <div class="row">
-            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block  sidebar collapse text-white bg-dark">
-                <div class="position-sticky pt-3">
+        <div class="px-4 py-1 my-2 ">
+            <div class="col-lg-10 mx-auto">
+                <div class="album py-2">
+                    <div class="container">
+                        <main id="main">
+                            <div
+                                class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                                <h1 class="h2"></h1>
+                                <div class="btn-toolbar mb-2 mb-md-0">
 
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link text-white" aria-current="page" href="#">
-
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-grid" viewBox="0 0 16 16">
-                                    <path
-                                        d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z" />
-                                </svg>
-                                Artikli
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="#" onclick="getHtml('narudzbe')">
-                                <span data-feather="file"></span>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-table" viewBox="0 0 16 16">
-                                    <path
-                                        d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 2h-4v3h4V4zm0 4h-4v3h4V8zm0 4h-4v3h3a1 1 0 0 0 1-1v-2zm-5 3v-3H6v3h4zm-5 0v-3H1v2a1 1 0 0 0 1 1h3zm-4-4h4V8H1v3zm0-4h4V4H1v3zm5-3v3h4V4H6zm4 4H6v3h4V8z" />
-                                </svg>
-                                Narudžbe
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="#">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-envelope" viewBox="0 0 16 16">
-                                    <path
-                                        d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4Zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1H2Zm13 2.383-4.708 2.825L15 11.105V5.383Zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741ZM1 11.105l4.708-2.897L1 5.383v5.722Z" />
-                                </svg>
-                                Poruke
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="#">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-shop" viewBox="0 0 16 16">
-                                    <path
-                                        d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.371 2.371 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976l2.61-3.045zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0zM1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5zM4 15h3v-5H4v5zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-3zm3 0h-2v3h2v-3z" />
-                                </svg>
-                                Katalog
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="#" onclick="getHtml('postavke')">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="bi bi-gear" viewBox="0 0 16 16">
-                                    <path
-                                        d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z" />
-                                    <path
-                                        d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z" />
-                                </svg>
-                                Postavke
-                            </a>
-                        </li>
+                                    <button type="button" class="btn btn-md btn-success" data-bs-toggle="modal"
+                                        data-bs-target="#staticBackdropUrediArtikal"
+                                        onclick="srediModal('', 'Dodaj artikal', 'dodaj')">
+                                        <span data-feather="calendar"></span>
+                                        Dodaj Novi artikal
+                                    </button>
+                                </div>
+                            </div>
 
 
-                    </ul>
 
+                            <h2>Ukupno <%= artikli.length %> artikala</h2>
+                            <div class="table-responsive">
+                                <table class=" table table-striped table-dark table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">#</th>
+                                            <th scope="col">Naziv</th>
+                                            <th scope="col">Kategorija</th>
+                                            <th scope="col">Cijena</th>
+                                            <th scope="col">Akcije</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% for(let i=0;i<artikli.length;i++) {%>
+                                            <tr id='<%=artikli[i].id_artikla%>'>
+                                                <td>
+                                                    <%= i + 1 %>
+                                                </td>
+                                                <td>
+                                                    <%= artikli[i].naziv_artikla %>
+                                                </td>
+                                                <td>
+                                                    <%= artikli[i].naziv_kategorije %>
+                                                </td>
+                                                <td>
+                                                    <%= artikli[i].cijena %> KM
+                                                </td>
+                                                <td>
+                                                    <div class="btn-group btn-group-justified" role="group">
+                                                        <div class="btn-group" role="group">
+                                                            <button type="button"
+                                                                class=" btn-group btn btn-sm btn-warning"
+                                                                onclick="srediModal( '<%= JSON.stringify(artikli[i] )%>', 'Uredi artikal', 'edit'  )"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#staticBackdropUrediArtikal">
+                                                                <span data-feather="calendar"></span>
+                                                                Uredi
+                                                            </button>
+                                                        </div>
+                                                        <div class="btn-group" role="group">
+                                                            <button type="button"
+                                                                class="btn-group btn btn-sm btn-danger"
+                                                                onclick="izbrisiArtikal('<%=artikli[i].id_artikla%>')">
+                                                                <span data-feather="calendar"></span>
+                                                                Izbriši
+                                                            </button>
+                                                        </div>
+                                                        <div class="btn-group" role="group">
+                                                            <button type="button" class="btn btn-sm btn-success"
+                                                                onclick="izbrisiArtikal('<%=artikli[i].id_artikla%>')">
+                                                                <span data-feather="calendar"></span>
+                                                                Dodaj u katalog
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <% } %>
 
-                </div>
-            </nav>
-
-            <main id="main" class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-                <div
-                    class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2"></h1>
-                    <div class="btn-toolbar mb-2 mb-md-0">
-
-                        <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal"
-                            data-bs-target="#staticBackdropUrediArtikal"
-                            onclick="srediModal('', 'Dodaj artikal', 'dodaj')">
-                            <span data-feather="calendar"></span>
-                            Dodaj Novi artikal
-                        </button>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </main>
                     </div>
                 </div>
-
-
-
-                <h2>Ukupno <%= artikli.length %> artikala</h2>
-                <div class="table-responsive">
-                    <table class="table table-striped table-sm">
-                        <thead>
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Naziv</th>
-                                <th scope="col">Kategorija</th>
-                                <th scope="col">Cijena</th>
-                                <th scope="col">Akcije</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% for(let i=0;i<artikli.length;i++) {%>
-                                <tr>
-                                    <td>
-                                        <%= i + 1 %>
-                                    </td>
-                                    <td>
-                                        <%= artikli[i].naziv_artikla %>
-                                    </td>
-                                    <td>
-                                        <%= artikli[i].naziv_kategorije %>
-                                    </td>
-                                    <td>
-                                        <%= artikli[i].cijena %> KM
-                                    </td>
-                                    <td>
-                                        <div class="btn-group me-2 col-6 mx-auto">
-                                            <button type="button" class="btn btn-sm btn-warning"
-                                                onclick="srediModal( '<%= JSON.stringify(artikli[i] )%>', 'Uredi artikal', 'edit'  )"
-                                                data-bs-toggle="modal" data-bs-target="#staticBackdropUrediArtikal">
-                                                <span data-feather="calendar"></span>
-                                                Uredi
-                                            </button>
-                                            <button type="button" class="btn btn-sm btn-danger"
-                                                onclick="izbrisiArtikal('<%=artikli[i].id_artikla%>')">
-                                                <span data-feather="calendar"></span>
-                                                Izbriši
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <% } %>
-
-                        </tbody>
-                    </table>
-                </div>
-            </main>
+            </div>
         </div>
-    </div>
 
-    <!-- Modal za edit -->
-    <!-- Naziv, kategorija, cijena, slike, vrsta oglasa(prodaja, iznamljivanje), lokacija(po defaultu se stavlja lokacija prodavnice), datum objave, samo prikaz ocjena, stanje(novo, koristeno, refurbished) -->
-    <div class=" modal fade" id="staticBackdropUrediArtikal" data-bs-backdrop="static" data-bs-keyboard="false"
-        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Uredi artikal</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="data" method="post" action="/trgovina/dodaj_artikal" enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <label for="naziv" class="col-form-label">Naziv:</label>
-                            <input type="text" class="form-control" id="naziv" name="naziv">
-                        </div>
-                        <div class="row">
-                            <div class="mb-3 col">
-                                <label for="cijena" class="col-form-label">Cijena:</label>
-                                <input type="text" class="form-control" id="cijena" name="cijena">
+        </div>
+        </div>
+
+        <!-- Modal za edit -->
+        <!-- Naziv, kategorija, cijena, slike, vrsta oglasa(prodaja, iznamljivanje), lokacija(po defaultu se stavlja lokacija prodavnice), datum objave, samo prikaz ocjena, stanje(novo, koristeno, refurbished) -->
+        <div class=" modal fade" id="staticBackdropUrediArtikal" data-bs-backdrop="static" data-bs-keyboard="false"
+            tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Uredi artikal</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="data" method="post" action="/trgovina/dodaj_artikal" enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="naziv" class="col-form-label">Naziv:</label>
+                                <input type="text" class="form-control" id="naziv" name="naziv">
                             </div>
-                            <div class="mb-3 col">
-                                <label for="kolicina" class="col-form-label">Kolicina:</label>
-                                <input type="text" class="form-control" id="kolicina" value="1" name="kolicina">
+                            <div class="row">
+                                <div class="mb-3 col">
+                                    <label for="cijena" class="col-form-label">Cijena:</label>
+                                    <input type="text" class="form-control" id="cijena" name="cijena">
+                                </div>
+                                <div class="mb-3 col">
+                                    <label for="kolicina" class="col-form-label">Kolicina:</label>
+                                    <input type="text" class="form-control" id="kolicina" value="1" name="kolicina">
+                                </div>
+                                <div class="mb-3 col">
+                                    <label for="stanje" class="col-form-label">Stanje:</label>
+                                    <select id="stanje" class="form-select form-select-sm"
+                                        aria-label=".form-select-sm example" name="stanje">
+                                        <option value="1">Novo</option>
+                                        <option value="2">Korišteno</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="mb-3 col">
-                                <label for="stanje" class="col-form-label">Stanje:</label>
-                                <select id="stanje" class="form-select form-select-sm"
-                                    aria-label=".form-select-sm example" name="stanje">
-                                    <option value="1">Novo</option>
-                                    <option value="2">Korišteno</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="mb-3 col">
-                                <label for="kategorija" class="col-form-label">Kategorija:</label>
-                                <select id="kategorija" name="kategorija" class="form-select form-select-sm"
-                                    aria-label=".form-select-sm example">
+                            <div class="row">
+                                <div class="mb-3 col">
+                                    <label for="kategorija" class="col-form-label">Kategorija:</label>
+                                    <select id="kategorija" name="kategorija" class="form-select form-select-sm"
+                                        aria-label=".form-select-sm example">
 
-                                </select>
-                            </div>
-                            <div class="mb-3 col">
-                                <label for="lokacija" class="col-form-label">Lokacija:</label>
+                                    </select>
+                                </div>
+                                <div class="mb-3 col">
+                                    <label for="lokacija" class="col-form-label">Lokacija:</label>
 
-                                <select id="lokacija" class="form-select form-select-sm"
-                                    aria-label=".form-select-sm example" name="lokacija">
+                                    <select id="lokacija" class="form-select form-select-sm"
+                                        aria-label=".form-select-sm example" name="lokacija">
 
-                                </select>
-                            </div>
-
-                        </div>
-                        <div class="mb-3">
-                            <label for="opis" class="col-form-label">Opis:</label>
-                            <textarea class="form-control" id="opis" name="opis"></textarea>
-                        </div>
-                        <div class="mb-3">
-
-                            <label for="fotografija" class="col-form-label">Dodajte fotografiju</label>
-                            <div class="input-group mb-4">
-                                <input type="file" accept='image/*' name='slike_artikla' multiple class="form-control"
-                                    id="inputGroupFile01">
-
-                            </div>
-
-
-                        </div>
-
-                        <div class="accordion" id="accordionExample">
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="headingOne">
-                                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                        data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"
-                                        onclick="dohvatiFotografije()">
-                                        Fotografije
-                                    </button>
-                                </h2>
-
-                                <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne"
-                                    data-bs-parent="#accordionExample">
-                                    <div class="accordion-body">
-                                        <div id="uplFotografije" class="row py-3 shadow-5">
-
-                                        </div>
-                                    </div>
+                                    </select>
                                 </div>
 
                             </div>
+                            <div class="mb-3">
+                                <label for="opis" class="col-form-label">Opis:</label>
+                                <textarea class="form-control" id="opis" name="opis"></textarea>
+                            </div>
+                            <div class="mb-3">
+
+                                <label for="fotografija" class="col-form-label">Dodajte fotografiju</label>
+                                <div class="input-group mb-4">
+                                    <input type="file" accept='image/*' name='slike_artikla' multiple
+                                        class="form-control" id="inputGroupFile01">
+
+                                </div>
 
 
+                            </div>
+
+                            <div class="accordion" id="accordionExample">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingOne">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                            data-bs-target="#collapseOne" aria-expanded="true"
+                                            aria-controls="collapseOne" onclick="dohvatiFotografije()">
+                                            Fotografije
+                                        </button>
+                                    </h2>
+
+                                    <div id="collapseOne" class="accordion-collapse collapse"
+                                        aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <div id="uplFotografije" class="row py-3 shadow-5">
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+
+                            </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zatvori</button>
                                 <button id="sacuvajDugme" type="button" class="btn btn-primary"
                                     onclick="dodajArtikal('add')">Sačuvaj</button>
                             </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script>
-        var kategorije;
-        var lokacije;
-        var t_lokacija;
-        var id_artikla = 0;
-    </script>
+        <script>
+            (function () {
+                'use strict'
+
+                document.querySelector('#navbarSideCollapse').addEventListener('click', function () {
+                    console.log("Open");
+                    document.querySelector('.offcanvas-collapse').classList.toggle('open')
+                })
+            })()
+
+
+        </script>
 </body>
 
 </html>

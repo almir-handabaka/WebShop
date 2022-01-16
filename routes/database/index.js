@@ -128,7 +128,9 @@ exports.db_funkcije = {
             }
         }
         upit += ';';
-        console.log(upit);
+
+        //console.log(upit);
+
         return new Promise((resolve, reject) => {
             pool.query(upit, fotografije, (err, result) => {
                 if (err) {
@@ -154,6 +156,52 @@ exports.db_funkcije = {
         })
     },
 
+    izbrisiFotografiju: (foto_id) => {
+        return new Promise((resolve, reject) => {
+            pool.query("delete from fotografije_artikala where id = $1", [foto_id], (err, result) => {
+                if (err) {
+                    console.log("Error pri brisanju fotografije!");
+                    return reject(err);
+                }
+                console.log("Foto izbrisan");
+                return resolve();
+            })
+        })
+    },
+
+    dohvatiPodatkeOTrgovini: (trgovina_id) => {
+        return new Promise((resolve, reject) => {
+            pool.query("select * from korisnici kr inner join trgovine tr on kr.id = tr.korisnik_id inner join lokacije_trgovina lt on tr.id = lt.trgovina_id where tr.id = $1", [trgovina_id], (err, result) => {
+                if (err) {
+                    console.log("Error pri dohvacanju podataka o trgovini!");
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    },
+    // 0 poslata, 1 prihvacena, 2 odbijena, 3 isporuceno
+    dohvatiAktivneNarudzbe: (trgovina_id) => {
+        return new Promise((resolve, reject) => {
+            pool.query("select * from narudzbe nr inner join artikli ar on nr.artikal_id = ar.id_artikla inner join korisnici ko on nr.porucioc_id = ko.id where (nr.status_isporuke = 0 or nr.status_isporuke = 2) and nr.trgovina_id = $1", [trgovina_id], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    },
+
+    dohvatiSveNarudzbe: (trgovina_id) => {
+        return new Promise((resolve, reject) => {
+            pool.query("select * from narudzbe nr inner join artikli ar on nr.artikal_id = ar.id_artikla inner join korisnici ko on nr.porucioc_id = ko.id where nr.trgovina_id = $1", [trgovina_id], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    },
 
 
 

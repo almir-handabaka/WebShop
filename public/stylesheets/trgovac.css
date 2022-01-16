@@ -4,8 +4,10 @@ body {
 }
 
 body {
-  padding-top: 56px;
-  background-image: linear-gradient(to right, #a5dad7 0%, #736ac5 100%);
+    padding-top: 56px;
+    
+    background-color: #9bb3cc;
+
 }
 
 @media (max-width: 991.98px) {
