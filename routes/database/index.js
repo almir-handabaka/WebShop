@@ -183,7 +183,7 @@ exports.db_funkcije = {
     // 0 poslata, 1 prihvacena, 2 odbijena, 3 isporuceno
     dohvatiAktivneNarudzbe: (trgovina_id) => {
         return new Promise((resolve, reject) => {
-            pool.query("select * from narudzbe nr inner join artikli ar on nr.artikal_id = ar.id_artikla inner join korisnici ko on nr.porucioc_id = ko.id where (nr.status_isporuke = 0 or nr.status_isporuke = 2) and nr.trgovina_id = $1", [trgovina_id], (err, result) => {
+            pool.query("select * from narudzbe nr inner join artikli ar on nr.artikal_id = ar.id_artikla inner join korisnici ko on nr.porucioc_id = ko.id where (nr.status_isporuke = 0 or nr.status_isporuke = 1) and nr.trgovina_id = $1", [trgovina_id], (err, result) => {
                 if (err) {
                     return reject(err);
                 }
@@ -195,6 +195,17 @@ exports.db_funkcije = {
     dohvatiSveNarudzbe: (trgovina_id) => {
         return new Promise((resolve, reject) => {
             pool.query("select * from narudzbe nr inner join artikli ar on nr.artikal_id = ar.id_artikla inner join korisnici ko on nr.porucioc_id = ko.id where nr.trgovina_id = $1", [trgovina_id], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    },
+
+    promjeniStatusNarudzbe: (id_narudzbe, novi_status, trgovina_id) => {
+        return new Promise((resolve, reject) => {
+            pool.query("update narudzbe set status_isporuke = $1 where id_narudzbe = $2 and trgovina_id = $3", [novi_status, id_narudzbe, trgovina_id], (err, result) => {
                 if (err) {
                     return reject(err);
                 }

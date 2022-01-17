@@ -267,9 +267,10 @@ router.post('/fotografija/delete', function (req, res, next) {
 
 });
 
+// 0 poslata, 1 prihvacena, 2 odbijena, 3 isporuceno
 router.get('/narudzbe/aktivne', function (req, res, next) {
     db_funkcije.dohvatiAktivneNarudzbe(3).then((result) => {
-        console.log(result);
+        //console.log(result);
         res.render('trgovina/aktivne_narudzbe', { artikli: result, title: "Aktivne narudzbe" });
     }).catch((error) => {
         console.log(error);
@@ -286,6 +287,43 @@ router.get('/narudzbe/evidencija', function (req, res, next) {
         console.log(error);
         res.sendStatus(404);
     });
+
+});
+
+
+router.post('/narudzbe/prihvati', function (req, res, next) {
+    let id_narudzbe = req.body.id_narudzbe;
+    req.trgovina_id = 3;
+    db_funkcije.promjeniStatusNarudzbe(id_narudzbe, 1, req.trgovina_id).then(() => {
+        res.sendStatus(200);
+    }).catch((error) => {
+        console.log(error);
+        res.sendStatus(404);
+    })
+
+});
+
+router.post('/narudzbe/odbij', function (req, res, next) {
+    let id_narudzbe = req.body.id_narudzbe;
+    req.trgovina_id = 3;
+    db_funkcije.promjeniStatusNarudzbe(id_narudzbe, 2, req.trgovina_id).then(() => {
+        res.sendStatus(200);
+    }).catch((error) => {
+        console.log(error);
+        res.sendStatus(404);
+    })
+
+});
+
+router.post('/narudzbe/isporuceno', function (req, res, next) {
+    let id_narudzbe = req.body.id_narudzbe;
+    req.trgovina_id = 3;
+    db_funkcije.promjeniStatusNarudzbe(id_narudzbe, 3, req.trgovina_id).then(() => {
+        res.sendStatus(200);
+    }).catch((error) => {
+        console.log(error);
+        res.sendStatus(404);
+    })
 
 });
 
