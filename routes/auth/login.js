@@ -70,7 +70,7 @@ router.post('/', function (req, res, next) {
 // izbrisati token
 router.get('/logout', function (req, res, next) {
     res.clearCookie("authToken");
-    res.sendStatus(200);
+    res.redirect('/');
 });
 
 

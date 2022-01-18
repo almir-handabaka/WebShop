@@ -186,29 +186,35 @@ router.get('/narudzbe', function (req, res, next) {
 
 /* Postavke trgovine  -  Za svaku trgovinu znamo naziv, kontakt telefon i e-mail, adresu sjedišta i drugih poslovnica (naziv ulice i grad), kategoriju/kategorije usluga i druge podatke.   */
 
-const trgovina = {
-    naziv: "Miralkov Kutak",
-    kontakt_mob: "062697432",
-    email: "almir.handabaka@gmail.com",
-    grad: "Sarajevo",
-    adresa: "Gornji Velesici do 130",
-    sifra: "almir123456",
-}
 
-router.get('/postavke', function (req, res, next) {
-    db_funkcije.dohvatiPodatkeOTrgovini(3).then((result) => {
-        console.log(result);
-        res.render('trgovina/postavke', { data: result });
-    }).catch((error) => {
-        console.log(error);
-        res.sendStatus(404);
-    })
+
+router.get('/postavke', async function (req, res, next) {
+
+    const result = await db_funkcije.dohvatiPodatkeOTrgovini(3);
+    const gradIKanton = await db_funkcije.dohvatiGradoveIKantone();
+    const kanton = gradIKanton[0].rows;
+    const grad = gradIKanton[1].rows;
+    console.log(result);
+
+    res.render('trgovina/postavke', { data: result, kanton: kanton, grad: grad, title: "Postavke" });
+
+
+
+
+    // db_funkcije.dohvatiPodatkeOTrgovini(3).then((result) => {
+    //     for (let i = 0; i < result.length; i++)
+    //         result[i].password_hash = "";
+
+    //     console.log(result);
+    //     res.render('trgovina/postavke', { data: result, title: "Postavke" });
+    // }).catch((error) => {
+    //     console.log(error);
+    //     res.sendStatus(404);
+    // });
 
 
 
 });
-
-
 
 
 //const upload = multer({ dest: './public/data/uploads/' });
@@ -316,6 +322,18 @@ router.post('/narudzbe/odbij', function (req, res, next) {
 });
 
 router.post('/narudzbe/isporuceno', function (req, res, next) {
+    let id_narudzbe = req.body.id_narudzbe;
+    req.trgovina_id = 3;
+    db_funkcije.promjeniStatusNarudzbe(id_narudzbe, 3, req.trgovina_id).then(() => {
+        res.sendStatus(200);
+    }).catch((error) => {
+        console.log(error);
+        res.sendStatus(404);
+    })
+
+});
+
+router.post('/postavke/detalji', function (req, res, next) {
     let id_narudzbe = req.body.id_narudzbe;
     req.trgovina_id = 3;
     db_funkcije.promjeniStatusNarudzbe(id_narudzbe, 3, req.trgovina_id).then(() => {

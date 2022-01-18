@@ -84,7 +84,7 @@ const dohvatiLokacije = () => {
                 lokacije = data;
                 //console.log(data);
                 for (let i = 0; i < lokacije.length; i++) {
-                    $("#lokacija").append(`<option value = ${lokacije[i].id}>${lokacije[i].naziv_trgovine}</option>`);
+                    $("#lokacija").append(`<option value = ${lokacije[i].id_lokacije}>${lokacije[i].naziv_trgovine}</option>`);
                 }
                 $("#lokacija").val(t_lokacija);
             }
