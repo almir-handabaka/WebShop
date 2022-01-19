@@ -15,17 +15,25 @@
         crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link href="/stylesheets/trgovac.css" rel="stylesheet">
+
     <style>
+        .toast {
+            opacity: 1 !important;
+        }
 
+        #toast-container>div {
+            opacity: 1 !important;
+        }
     </style>
-
-    <!-- Custom styles for this template -->
-    <script src="/javascripts/trgovina.js"></script>
+    <script src="/javascripts/postavke.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 </head>
 
 <body class="purple">
     <%- include('../partials/trgovac_hm.ejs') %>
+
 
         <div class="px-4 py-1 my-2 ">
             <div class="col-lg-10 mx-auto">
@@ -55,13 +63,15 @@
                                                 class="accordion-collapse collapse show"
                                                 aria-labelledby="panelsStayOpen-headingOne">
                                                 <div class="accordion-body">
+
                                                     <div class="input-group mb-3 row">
                                                         <span class="input-group-text col-4"
                                                             id="basic-addon1">Naziv</span>
-                                                        <input type="text" class="form-control col-8"
-                                                            placeholder="Naziv" aria-label="Username"
-                                                            aria-describedby="basic-addon1" name="naziv"
-                                                            value="<%= data[0].naziv %> ">
+                                                        <input id="naziv_trgovine" type="text"
+                                                            class="form-control col-8" placeholder="Naziv"
+                                                            aria-label="Username" aria-describedby="basic-addon1"
+                                                            name="naziv" value="<%= data[0].naziv %>">
+
                                                     </div>
                                                     <div class="input-group mb-3 row">
                                                         <span class="input-group-text col-4" id="basic-addon1">Ime
@@ -81,7 +91,7 @@
                                                     <div class="input-group mb-3 row">
                                                         <span class="input-group-text col-4" id="basic-addon1">Kontakt
                                                             telefon</span>
-                                                        <input type="text" class="form-control col-8"
+                                                        <input id="kontakt_tel" type="text" class="form-control col-8"
                                                             placeholder="xxx-xxx-xxx" aria-label="Username"
                                                             aria-describedby="basic-addon1" name="kontakt_tel" value="<%= data[0].broj_mobitela
                                                             %>">
@@ -97,13 +107,14 @@
 
                                                     <div class="input-group">
                                                         <span class="input-group-text">Opis trgovine</span>
-                                                        <textarea class="form-control"
+                                                        <textarea id="opis" class="form-control"
                                                             aria-label="With textarea"><%= data[0].opis %></textarea>
                                                     </div>
                                                     <div class="col-auto">
-                                                        <button type="submit" class="btn btn-primary mb-3 mt-3">Promjeni
-                                                            detalje</button>
+                                                        <button type="submit" class="btn btn-primary mb-3 mt-3"
+                                                            onclick="updatujDetalje()">Sačuvaj promjene</button>
                                                     </div>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -152,13 +163,14 @@
                                                     <div class="input-group mb-3 row">
                                                         <span class="input-group-text col-4"
                                                             id="basic-addon1">Adresa</span>
-                                                        <input type="text" class="form-control col-8"
+                                                        <input id="adresa" type="text" class="form-control col-8"
                                                             placeholder="Adresa" aria-label="Username"
                                                             aria-describedby="basic-addon1">
                                                     </div>
 
                                                     <div class="col-auto">
-                                                        <button type="submit" class="btn btn-primary mb-3">Dodaj
+                                                        <button onclick="dodajPoslovnicu()" type="button"
+                                                            class="btn btn-primary mb-3">Dodaj
                                                             poslovnicu</button>
                                                     </div>
                                                     <table class="table">
@@ -172,7 +184,7 @@
                                                         </thead>
                                                         <tbody>
                                                             <% for(let i=0;i<data.length;i++) {%>
-                                                                <tr>
+                                                                <tr id="poslovnica<%= data[i].id_lokacije %>">
                                                                     <th scope="row">
                                                                         <%= i+1 %>
                                                                     </th>
@@ -186,6 +198,7 @@
                                                                         <%= data[i].adresa_poslovnice %>
                                                                     </td>
                                                                     <td><button type="button"
+                                                                            onclick="ukloniPoslovnicu(`<%= data[i].id_lokacije %>`)"
                                                                             class="btn-close btn-danger"
                                                                             aria-label="Close"></button></td>
                                                                 </tr>
@@ -208,9 +221,10 @@
                                             </h2>
                                             <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse"
                                                 aria-labelledby="panelsStayOpen-headingTwo">
-                                                <div class="card mb-3 text-dark bg-light border-light py-4"
+                                                <div class="card mb-1 text-dark bg-light border-light py-4"
                                                     style="max-width: 800px;">
                                                     <div class="row g-0">
+
                                                         <div class="col-md-4">
                                                             <% if(data[0].url_profilna_slika !=null) {%>
                                                                 <img src="/data/uploads/<%= data[0].url_profilna_slika %>"
@@ -336,6 +350,7 @@
 
 
         </script>
+
 </body>
 
 </html>

@@ -196,7 +196,7 @@ router.get('/postavke', async function (req, res, next) {
     const grad = gradIKanton[1].rows;
     console.log(result);
 
-    res.render('trgovina/postavke', { data: result, kanton: kanton, grad: grad, title: "Postavke" });
+    res.render('trgovina/postavke', { data: result, kanton: kanton, grad: grad, title: "Postavke - Web Shop" });
 
 
 
@@ -334,15 +334,44 @@ router.post('/narudzbe/isporuceno', function (req, res, next) {
 });
 
 router.post('/postavke/detalji', function (req, res, next) {
-    let id_narudzbe = req.body.id_narudzbe;
+    let detalji = JSON.parse(req.body.detalji);
+    console.log(detalji);
     req.trgovina_id = 3;
-    db_funkcije.promjeniStatusNarudzbe(id_narudzbe, 3, req.trgovina_id).then(() => {
+
+    db_funkcije.promjeniDetaljeTrgovine(detalji, req.trgovina_id).then(db_funkcije.promjeniBrojKorisnika(detalji.kontakt_telefon, "almir.a@gmail.ba").then(() => {
+        res.sendStatus(200);
+    })).catch((error) => {
+        console.log(error);
+        res.sendStatus(404);
+    })
+
+
+
+});
+
+router.post('/postavke/poslovnica', function (req, res, next) {
+    let poslovnica = JSON.parse(req.body.poslovnica);
+    req.trgovina_id = 3;
+
+    db_funkcije.dodajPoslovnicu(poslovnica, req.trgovina_id).then(() => {
         res.sendStatus(200);
     }).catch((error) => {
         console.log(error);
         res.sendStatus(404);
     })
-
 });
+
+router.post('/postavke/poslovnica/delete', function (req, res, next) {
+    let id_poslovnice = req.body.id_poslovnice;
+    req.trgovina_id = 3;
+
+    db_funkcije.ukloniPoslovnicu(id_poslovnice, req.trgovina_id).then(() => {
+        res.sendStatus(200);
+    }).catch((error) => {
+        console.log(error);
+        res.sendStatus(404);
+    })
+});
+
 
 module.exports = router;

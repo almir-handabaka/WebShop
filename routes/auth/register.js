@@ -145,4 +145,11 @@ router.post('/trgovina', function (req, res, next) {
 
 });
 
+router.post('/promjena_sifre', function (req, res, next) {
+    let nova_sifra = req.body.new_password;
+
+});
+
+
+
 module.exports = router;

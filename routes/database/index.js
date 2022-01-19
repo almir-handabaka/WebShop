@@ -225,6 +225,51 @@ exports.db_funkcije = {
         })
     },
 
+    promjeniDetaljeTrgovine: (detalji, trgovina_id, email) => {
+        return new Promise((resolve, reject) => {
+            pool.query("update trgovine set naziv = $1, opis = $2 where id = $3", [detalji.naziv_trgovine, detalji.opis, trgovina_id], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve();
+            })
+        })
+    },
+
+
+    promjeniBrojKorisnika: (broj_mobitela, email) => {
+        return new Promise((resolve, reject) => {
+            pool.query("update korisnici set broj_mobitela = $1 where email = $2", [broj_mobitela, email], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve();
+            })
+        })
+    },
+
+    dodajPoslovnicu: (poslovnica, trgovina_id) => {
+        return new Promise((resolve, reject) => {
+            pool.query("insert into lokacije_trgovina (trgovina_id, grad, adresa_poslovnice) VALUES($1,$2,$3)", [trgovina_id, poslovnica.grad, poslovnica.adresa], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve();
+            })
+        })
+    },
+
+    ukloniPoslovnicu: (id_poslovnice, trgovina_id) => {
+        return new Promise((resolve, reject) => {
+            pool.query("delete from lokacije_trgovina where trgovina_id = $1 and id_lokacije = $2", [trgovina_id, id_poslovnice], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve();
+            })
+        })
+    },
+
 
 
 
