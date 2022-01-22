@@ -182,7 +182,7 @@
                                                                 <th scope="col">Adresa</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody>
+                                                        <tbody id="poslovnice">
                                                             <% for(let i=0;i<data.length;i++) {%>
                                                                 <tr id="poslovnica<%= data[i].id_lokacije %>">
                                                                     <th scope="row">
@@ -228,12 +228,13 @@
                                                         <div class="col-md-4">
                                                             <% if(data[0].url_profilna_slika !=null) {%>
                                                                 <img src="/data/uploads/<%= data[0].url_profilna_slika %>"
-                                                                    class="img-fluid rounded-start" alt="...">
+                                                                    class="img-fluid rounded-start" alt="..."
+                                                                    style="max-height: 60%;">
                                                                 <% } %>
                                                                     <% if(data[0].url_profilna_slika===null) {%>
                                                                         <img src="/data/uploads/default-avatar-profile.jpg"
                                                                             class="img-fluid rounded-start " alt="..."
-                                                                            style="height: 70%;">
+                                                                            style="max-height: 60%;">
                                                                         <% } %>
                                                         </div>
                                                         <div class="col-md-8 py-2">
@@ -241,16 +242,16 @@
                                                                 <h5 class="card-title">Uploaduj sliku</h5>
 
                                                                 <div class="form-row align-items-center">
-                                                                    <form action="/trgovina/profilna" method="post"
-                                                                        enctype="multipart/form-data">
+                                                                    <form enctype="multipart/form-data">
                                                                         <div class="input-group">
-                                                                            <input type="file" class="form-control"
+                                                                            <input type="file" accept='image/*'
+                                                                                name='avatar' class="form-control"
                                                                                 id="inputGroupFile04"
                                                                                 aria-describedby="inputGroupFileAddon04"
                                                                                 aria-label="Upload">
                                                                             <button class="btn btn-primary"
-                                                                                type="button "
-                                                                                id="inputGroupFileAddon04">Sačuvaj</button>
+                                                                                type="button" id="inputGroupFileAddon04"
+                                                                                onclick="uploadProfilnu()">Sačuvaj</button>
                                                                         </div>
                                                                     </form>
                                                                 </div>
@@ -277,7 +278,7 @@
                                                 aria-labelledby="panelsStayOpen-headingThree">
                                                 <div class="accordion-body">
 
-                                                    <form action="/promjena_sifre" method=post
+                                                    <form
                                                         oninput='up2.setCustomValidity(up2.value != up.value ? "Passwords do not match." : "")'>
                                                         <div class="input-group mb-3 row">
                                                             <span class="input-group-text col-4" id="basic-addon1">Nova
@@ -297,7 +298,8 @@
 
 
                                                         <div class="col-auto">
-                                                            <button type="submit" class="btn btn-primary mb-3">Promjeni
+                                                            <button type="button" class="btn btn-primary mb-3"
+                                                                onclick="promjeniSifru()">Promjeni
                                                                 sifru</button>
                                                         </div>
                                                     </form>

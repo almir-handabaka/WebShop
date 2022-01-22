@@ -36,59 +36,13 @@ const upload = multer({
 
 
 
-const artikli = [
-    {
-        naziv: "Apple Iphone 13 Pro",
-        kategorija: "Mobiteli",
-        cijena: 2150,
-    },
-    {
-        naziv: "Samsung Smart TV",
-        kategorija: "Televizori",
-        cijena: 2150,
-    },
-    {
-        naziv: "Sony PS5",
-        kategorija: "Konzole",
-        cijena: 1300,
-    },
-    {
-        naziv: "Apple Airpods",
-        kategorija: "Mobiteli",
-        cijena: 900,
-    },
-    {
-        naziv: "Haubice velikog dometa",
-        kategorija: "Black Market",
-        cijena: 25000,
-    },
-    {
-        naziv: "Jabuke",
-        kategorija: "Voće",
-        cijena: 1.5,
-    },
-    {
-        naziv: "Laptop HP G505",
-        kategorija: "Laptopi",
-        cijena: 815,
-    },
-    {
-        naziv: "RTX 3060",
-        kategorija: "Grafičke kartice",
-        cijena: 1450,
-    },
-];
-
-const naziv_trgovine = "Miralkov Kutak";
-
-
 /* Dashboard za prodavnicu */
 
 router.get('/', function (req, res, next) {
     // podatke o trgovini dodati u neki cookie pri loginu ili u req.trgovina
     db_funkcije.dohvatiArtikle(3).then((result) => {
         //console.log(result);
-        res.render('trgovina/trgovina', { title: 'Web Shop - ' + naziv_trgovine, naziv_trgovine: naziv_trgovine, artikli: result });
+        res.render('trgovina/trgovina', { title: 'Web Shop - ' + "Miralkov Kutak", naziv_trgovine: "Miralkov Kutak", artikli: result });
     }).catch((error) => {
         console.log(error);
         res.sendStatus(404);
@@ -170,22 +124,12 @@ router.post('/delete', function (req, res, next) {
 
 
 
-/* Trgovina dashboard ruta za narudžbe, sadrzi nove narudzbe koje trgovac prihvaca/odbija
-    i sve stare narudzbe
-    3 - isporuceno
-    4 - otkazano od kupca
-    5 - otkazano od trgovca
-
-*/
 router.get('/narudzbe', function (req, res, next) {
 
     const now = new Date();
     const ptime = date.format(now, 'YYYY/MM/DD HH:mm:ss');
     res.render('trgovina/narudzbe', { datum: ptime, narudzbe: narudzbe })
 });
-
-/* Postavke trgovine  -  Za svaku trgovinu znamo naziv, kontakt telefon i e-mail, adresu sjedišta i drugih poslovnica (naziv ulice i grad), kategoriju/kategorije usluga i druge podatke.   */
-
 
 
 router.get('/postavke', async function (req, res, next) {
@@ -194,24 +138,9 @@ router.get('/postavke', async function (req, res, next) {
     const gradIKanton = await db_funkcije.dohvatiGradoveIKantone();
     const kanton = gradIKanton[0].rows;
     const grad = gradIKanton[1].rows;
-    console.log(result);
+    //console.log(result);
 
     res.render('trgovina/postavke', { data: result, kanton: kanton, grad: grad, title: "Postavke - Web Shop" });
-
-
-
-
-    // db_funkcije.dohvatiPodatkeOTrgovini(3).then((result) => {
-    //     for (let i = 0; i < result.length; i++)
-    //         result[i].password_hash = "";
-
-    //     console.log(result);
-    //     res.render('trgovina/postavke', { data: result, title: "Postavke" });
-    // }).catch((error) => {
-    //     console.log(error);
-    //     res.sendStatus(404);
-    // });
-
 
 
 });
@@ -219,10 +148,17 @@ router.get('/postavke', async function (req, res, next) {
 
 //const upload = multer({ dest: './public/data/uploads/' });
 router.post('/profilna', upload.single('avatar'), function (req, res, next) {
+    let email = "almir.a@gmail.ba";
+    db_funkcije.sacuvajProfilnu(email, req.fotografije).then(() => {
+        res.sendStatus(200);
+    }).catch((error) => {
+        console.log(error);
+        res.sendStatus(404);
+    })
 
-    res.send("Okej");
-    // req.file is the `avatar` file
-    // req.body will hold the text fields, if there were any
+
+
+
 });
 
 router.get('/kategorije', function (req, res, next) {
@@ -353,8 +289,8 @@ router.post('/postavke/poslovnica', function (req, res, next) {
     let poslovnica = JSON.parse(req.body.poslovnica);
     req.trgovina_id = 3;
 
-    db_funkcije.dodajPoslovnicu(poslovnica, req.trgovina_id).then(() => {
-        res.sendStatus(200);
+    db_funkcije.dodajPoslovnicu(poslovnica, req.trgovina_id).then((result) => {
+        res.status(200).json(result[0]);
     }).catch((error) => {
         console.log(error);
         res.sendStatus(404);

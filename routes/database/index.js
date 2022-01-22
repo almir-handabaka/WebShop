@@ -25,6 +25,30 @@ var pool = new Pool({
 
 
 exports.db_funkcije = {
+
+    dodajKorisnika: (korisnik, password_hash) => {
+        return new Promise((resolve, reject) => {
+            pool.query('insert into korisnici (ime, prezime, email, password_hash, tip_korisnika) values($1, $2, $3, $4, $5)', [korisnik.ime, korisnik.prezime, korisnik.email, password_hash, korisnik.tip], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result);
+
+            })
+        });
+    },
+
+    dodajTrgovinu: (naziv_trgovine, korisnik_id) => {
+        return new Promise((resolve, reject) => {
+            pool.query('insert into trgovine (naziv, korisnik_id) values($1, $2)', [naziv_trgovine, korisnik_id], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result);
+
+            })
+        });
+    },
     getKorisnik: (email) => {
         return new Promise((resolve, reject) => {
             pool.query('select * from korisnici where email = $1', [email], (err, result) => {
@@ -169,6 +193,18 @@ exports.db_funkcije = {
         })
     },
 
+    dohvatiTrgovinu: (id_korisnika) => {
+        return new Promise((resolve, reject) => {
+            pool.query("select * from trgovine where korisnik_id = $1", [id_korisnika], (err, result) => {
+                if (err) {
+                    console.log("Error pri dohvacanju podataka o trgovini!");
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    },
+
     dohvatiPodatkeOTrgovini: (trgovina_id) => {
         return new Promise((resolve, reject) => {
             pool.query("select * from korisnici kr inner join trgovine tr on kr.id = tr.korisnik_id left join lokacije_trgovina lt on tr.id = lt.trgovina_id inner join gradovi_lk gr on gr.id_grada = lt.grad inner join kantoni_lk ka on gr.kanton = ka.id_kantona where tr.id = $1", [trgovina_id], (err, result) => {
@@ -250,11 +286,11 @@ exports.db_funkcije = {
 
     dodajPoslovnicu: (poslovnica, trgovina_id) => {
         return new Promise((resolve, reject) => {
-            pool.query("insert into lokacije_trgovina (trgovina_id, grad, adresa_poslovnice) VALUES($1,$2,$3)", [trgovina_id, poslovnica.grad, poslovnica.adresa], (err, result) => {
+            pool.query("insert into lokacije_trgovina (trgovina_id, grad, adresa_poslovnice) VALUES($1,$2,$3) RETURNING id_lokacije", [trgovina_id, poslovnica.grad, poslovnica.adresa], (err, result) => {
                 if (err) {
                     return reject(err);
                 }
-                return resolve();
+                return resolve(result.rows);
             })
         })
     },
@@ -269,6 +305,40 @@ exports.db_funkcije = {
             })
         })
     },
+
+    sacuvajProfilnu: (email, fotografije) => {
+        return new Promise((resolve, reject) => {
+            pool.query("update korisnici set url_profilna_slika = $1 where email = $2", [fotografije[0], email], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve();
+            })
+        })
+    },
+
+    promjeniSifru: (email, hash) => {
+        return new Promise((resolve, reject) => {
+            pool.query("update korisnici set password_hash = $1 where email = $2", [hash, email], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve();
+            })
+        })
+    },
+
+    dohvatiArtikal: (artikal_id) => {
+        return new Promise((resolve, reject) => {
+            pool.query("select * from artikli where id_artikla = $1", [artikal_id], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    }
+
 
 
 

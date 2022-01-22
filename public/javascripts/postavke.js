@@ -79,8 +79,31 @@ const dodajPoslovnicu = () => {
                 poslovnica: JSON.stringify(poslovnica),
             },
             function (data, status) {
-                if (status)
+                if (status) {
                     toastr["success"]("Uspješno sačuvano!", "Nova poslovnica");
+                    let broj = $("#poslovnice").children().length;
+                    let tmp_html = `<tr id="poslovnica${data.id_lokacije}">
+                                                                    <th scope="row">
+                                                                        ${broj + 1}
+                                                                    </th>
+                                                                    <td>
+                                                                        ${$("#kantonSelekt option:selected").text()}
+                                                                    </td>
+                                                                    <td>
+                                                                        ${$("#gradSelekt option:selected").text()}
+                                                                    </td>
+                                                                    <td>
+                                                                        ${$("#adresa").val()}
+                                                                    </td>
+                                                                    <td><button type="button"
+                                                                            onclick="ukloniPoslovnicu('${data.id_lokacije}')"
+                                                                            class="btn-close btn-danger"
+                                                                            aria-label="Close"></button></td>
+                                                                </tr>`;
+                    $("#poslovnice").append(tmp_html);
+
+                }
+
             });
     }
 }
@@ -96,10 +119,72 @@ const ukloniPoslovnicu = (id_poslovnice) => {
         function (data, status) {
             if (status) {
                 toastr["success"]("Uspješno izbrisano!", "Poslovnica");
-                $("#poslovnica" + id_poslovnice).hide();
+                $("#poslovnica" + id_poslovnice).remove();
             }
             else {
                 toastr["error"]("Greška prilikom brisanja poslovnice!", "Greška !");
             }
         });
+}
+
+
+const uploadProfilnu = () => {
+    toastr.options = options;
+
+    var fd = new FormData();
+    var files = $('#inputGroupFile04')[0].files;
+
+    if (files.length != 1) {
+        toastr["error"]("Moguće je uploadovati samo jednu fotografiju!", "Profilna slika");
+        return;
+    }
+
+    for (let i = 0; i < files.length; i++) {
+        fd.append("avatar", files[i], files[i].name);
+    }
+
+    $.ajax({
+        url: "/trgovina/profilna",
+        type: 'post',
+        data: fd,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            if (response) {
+                toastr["success"]("Profilna slika promjenjena!", "Profilna slika");
+                $('#inputGroupFile04').val("");
+            } else {
+                toastr["error"]("Došlo je do greške, pokušajte opet!", "Profilna slika");
+            }
+        },
+    });
+
+}
+
+
+const promjeniSifru = () => {
+    toastr.options = options;
+    console.log("promjena sifre");
+    let nova_sifra = $('#password1').val();
+    let ponovljena_sifra = $('#password2').val();
+
+    if (nova_sifra === ponovljena_sifra && nova_sifra != undefined && ponovljena_sifra != undefined && nova_sifra.length >= 5) {
+        $.post("/register/promjena_sifre",
+            {
+                nova_sifra: nova_sifra,
+            },
+            function (data, status) {
+                if (status) {
+                    toastr["success"]("Nova šifra uspješno promjenjena!", "Šifra");
+                    window.location = "/login/logout";
+                } else {
+                    toastr["error"]("Došlo je do greške, pokušajte opet!", "Šifra");
+                };
+
+            });
+    }
+    else {
+        toastr["error"]("Šifra mora imati 5 ili vise karaktera i oba polja se moraju podudarati!", "Šifra");
+    }
+
 }

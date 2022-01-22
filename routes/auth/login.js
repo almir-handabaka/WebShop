@@ -19,6 +19,17 @@ const generisiToken = (korisnik, remember_me, JWT_TOKEN) => {
     }
     return jwt.sign(korisnik, JWT_TOKEN, duzina_trajanja);
 }
+
+// token za trgovce
+const generisiTokenTrgovac = (trgovina, remember_me, JWT_TOKEN) => {
+    let duzina_trajanja = { expiresIn: '3600s' };
+    if (remember_me != undefined) {
+        duzina_trajanja.expiresIn = '30d';
+    }
+    return jwt.sign(trgovina, JWT_TOKEN, duzina_trajanja);
+}
+
+
 // almir.handabaka@gmail.com    almir123
 // almir.a@gmail.ba   almir321
 /* Auth logina i dodjela JWT tokena */
@@ -43,10 +54,20 @@ router.post('/', function (req, res, next) {
                     else if (result && result != undefined) {
                         const korisnik = { id: result1[0].id, ime: result1[0].ime, prezime: result1[0].prezime, tip: result1[0].tip_korisnika, email: result1[0].email };
                         const token = generisiToken(korisnik, remember_me, JWT_TOKEN);
-                        //console.log(token);
                         res.cookie('authToken', token);
-                        //res.cookie('userName', result1[0].username);
-                        res.status(200).json({ token: token });
+
+                        if (korisnik.tip === 2) {
+                            db_funkcije.dohvatiTrgovinu(korisnik.id).then((trgovina) => {
+                                let trgToken = generisiTokenTrgovac(trgovina[0], remember_me, JWT_TOKEN);
+                                res.cookie('trgToken', trgToken);
+                                console.log(trgToken);
+                                res.status(200).json({ token: token });
+                            })
+                        } else {
+                            res.status(200).json({ token: token });
+                        }
+
+
                     }
                     else if (result1.length != 0) {
                         console.log("Sifra ne odgovara");

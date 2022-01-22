@@ -107,11 +107,10 @@ const dodajArtikal = (akcija) => {
     var fd = new FormData();
     var files = $('#inputGroupFile01')[0].files;
 
-    let lista = [];
     for (let i = 0; i < files.length; i++) {
         fd.append("file", files[i], files[i].name);
-
     }
+
     console.log("Kategorija ", $("#kategorija").val());
     let data = {
         naziv: $("#naziv").val(),

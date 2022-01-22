@@ -33,27 +33,37 @@ const trgovac_rute = ['/trgovina', '/trgovina/delete', '/trgovina/narudzbe', '/t
 const admin_rute = [];
 
 app.use(function (req, res, next) {
+  console.log(req.cookies.authToken);
   const url = req.originalUrl;
   var ima_token = false;
   var authToken;
   var decoded;
   dotenv.config();
   const JWT_TOKEN = process.env.JWT_TOKEN_SECRET;
-  return next();
 
+  return next();
   //---------------------
   /*
     Provjeravamo da li korisnik ima validan auth token. U slucaju da ga nema ili da je token zbog neceg ne važi onda ga propustamo na dozvoljenu rutu ili redirektamo na login formu.
   */
   try {
-    const cookies = req.headers.cookie.split('; ');
-    for (let i = 0; i < cookies.length; i++) {
-      if (cookies[i].split("=")[0] == 'authToken') {
-        authToken = cookies[i].split("=")[1];
-        decoded = jwt.verify(authToken, JWT_TOKEN);
-        ima_token = true;
-        break;
-      }
+    // const cookies = req.headers.cookie.split('; ');
+    // for (let i = 0; i < cookies.length; i++) {
+    //   if (cookies[i].split("=")[0] == 'authToken') {
+    //     authToken = cookies[i].split("=")[1];
+    //     decoded = jwt.verify(authToken, JWT_TOKEN);
+    //     ima_token = true;
+    //     break;
+    //   }
+    // }
+
+    authToken = req.cookies.authToken;
+    if (authToken === undefined) {
+      ima_token = false;
+    }
+    else {
+      ima_token = true;
+      decoded = jwt.verify(authToken, JWT_TOKEN);
     }
 
   }
@@ -70,6 +80,11 @@ app.use(function (req, res, next) {
     console.log("IF 2");
     return res.redirect('/');
   }
+
+
+
+
+
   //---------------------
 
   /*
@@ -84,7 +99,9 @@ app.use(function (req, res, next) {
   try {
     req.rola = decoded.tip;
     req.korisnik = decoded;
-    //console.log(req.rola);
+    if (req.rola === 2) {
+      req.trgovina = jwt.verify(req.cookies.trgToken, JWT_TOKEN);
+    }
   } catch (err) {
     console.log("CATCH 1");
     res.redirect('/');

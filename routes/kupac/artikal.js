@@ -16,20 +16,6 @@ router.get('/', function (req, res, next) {
 });
 
 
-router.get('/artikal/:artikal_id', function (req, res, next) {
-    let artikal_id = req.params.artikal_id;
-
-    db_funkcije.dohvatiArtikal(artikal_id).then((result) => {
-        //console.log(result);
-        if (result[0] != undefined)
-            res.render('kupac/artikal', { title: result[0].naziv_artikla + ' - Web Shop', artikal: result[0] });
-        else
-            res.redirect('/pocetna');
-    }).catch((error) => {
-        console.log(error);
-        res.sendStatus(404);
-    });
-});
 
 
 
