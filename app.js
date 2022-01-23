@@ -7,7 +7,7 @@ var dotenv = require('dotenv');
 var jwt = require('jsonwebtoken');
 
 const { loginRouter, registerRouter } = require('./routes/auth');
-const { pocetna_stranica } = require('./routes/kupac');
+const { pocetna_stranica, artikal } = require('./routes/kupac');
 
 
 var indexRouter = require('./routes/prijava');
@@ -33,7 +33,7 @@ const trgovac_rute = ['/trgovina', '/trgovina/delete', '/trgovina/narudzbe', '/t
 const admin_rute = [];
 
 app.use(function (req, res, next) {
-  console.log(req.cookies.authToken);
+
   const url = req.originalUrl;
   var ima_token = false;
   var authToken;
@@ -138,6 +138,7 @@ app.use('/register', registerRouter);
 //app.use('/naslovna', naslovnaRouter);
 app.use('/trgovina', trgovinaRouter);
 app.use('/pocetna', pocetna_stranica);
+app.use('/artikal', artikal);
 
 
 // catch 404 and forward to error handler

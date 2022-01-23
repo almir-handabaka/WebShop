@@ -82,11 +82,11 @@ const dohvatiLokacije = () => {
         function (data, status) {
             if (status == 'success') {
                 lokacije = data;
-                //console.log(data);
+                console.log(data);
                 for (let i = 0; i < lokacije.length; i++) {
-                    $("#lokacija").append(`<option value = ${lokacije[i].id_lokacije}>${lokacije[i].naziv_trgovine}</option>`);
+                    $("#lokacija").append(`<option value = ${lokacije[i].id_lokacije}>${lokacije[i].adresa_poslovnice}</option>`);
                 }
-                $("#lokacija").val(t_lokacija);
+                $("#lokacija").val(lokacije[0].id_lokacije);
             }
             else {
                 console.log("greska lokacije");

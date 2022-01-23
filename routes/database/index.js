@@ -330,16 +330,25 @@ exports.db_funkcije = {
 
     dohvatiArtikal: (artikal_id) => {
         return new Promise((resolve, reject) => {
-            pool.query("select * from artikli where id_artikla = $1", [artikal_id], (err, result) => {
+            pool.query("select * from artikli ar left join lokacije_trgovina lt on ar.lokacija = lt.id_lokacije inner join gradovi_lk gl on lt.grad = gl.id_grada inner join trgovine t on ar.trgovina_id = t.id inner join korisnici kr on kr.id = t.korisnik_id where ar.id_artikla = $1", [artikal_id], (err, result) => {
                 if (err) {
                     return reject(err);
                 }
                 return resolve(result.rows);
             })
         })
-    }
+    },
 
-
+    dohvatiOcjene: (artikal_id) => {
+        return new Promise((resolve, reject) => {
+            pool.query("select count(*), avg(vrijednost_ocjene) from ocjene_artikala where id_artikla = $1", [artikal_id], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    },
 
 
 

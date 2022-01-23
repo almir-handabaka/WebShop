@@ -25,7 +25,7 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark" aria-label="Main navigation">
+    <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light" aria-label="Main navigation">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Web Shop</a>
             <button class="navbar-toggler p-0 border-0" type="button" id="navbarSideCollapse"
@@ -69,7 +69,7 @@
                         </div>
                         <input type="text" class="form-control" placeholder="Search" aria-label="Recipient's username"
                             aria-describedby="button-addon2">
-                        <button class="btn btn-info btn-outline-primary rounded-right" type="button"
+                        <button class="btn rounded-right" type="button" style="background-color: #746dc5;"
                             id="button-addon2">Button</button>
                     </div>
                 </form>
@@ -117,149 +117,171 @@
                     <div class="row featurette py-2 mx-auto">
                         <div class="col-md-8 col-sm-6  border mx-2 mx-auto">
                             <div class="container mt-3">
-                                <h2>Naziv artikla</h2>
+                                <h2>
+                                    <%= artikal.naziv_artikla %>
+                                </h2>
                                 <span class="heading">User Rating</span>
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star checked"></span>
-                                <span class="fa fa-star"></span>
-                                <p>4.1 average based on 254 reviews.</p>
-                                <br>
-                                <!-- Nav tabs -->
-                                <ul class="nav nav-tabs" role="tablist">
-                                    <li class="nav-item">
-                                        <a class="nav-link active" data-bs-toggle="tab" href="#home">Informacije</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link" data-bs-toggle="tab" href="#opis">Opis</a>
-                                    </li>
+                                <% for(let i=1;i<=ocjene.avg;i++){ %>
+                                    <span class="fa fa-star checked"></span>
+                                    <% } %>
+                                        <% for(let i=ocjene.avg;i<=5;i++){ %>
+                                            <span class="fa fa-star"></span>
+                                            <% } %>
 
 
-                                </ul>
+                                                <p>
+                                                    <%= ocjene.avg %> average based on <%= ocjene.count %> reviews.
+                                                </p>
+                                                <br>
+                                                <!-- Nav tabs -->
+                                                <ul class="nav nav-tabs" role="tablist">
+                                                    <li class="nav-item">
+                                                        <a class="nav-link active" data-bs-toggle="tab"
+                                                            href="#home">Informacije</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link" data-bs-toggle="tab" href="#opis">Opis</a>
+                                                    </li>
 
-                                <!-- Tab panes -->
-                                <div class="tab-content">
-                                    <div id="home" class="container tab-pane active"><br>
-                                        <div class="card mb-3" style="max-width: 800px;">
-                                            <div class="row g-0 ">
-                                                <div class="col-md-4 ">
-                                                    <!-- The Gallery as inline carousel, can be positioned anywhere on the page -->
+
+                                                </ul>
+
+                                                <!-- Tab panes -->
+                                                <div class="tab-content">
+                                                    <div id="home" class="container tab-pane active"><br>
+                                                        <div class="card mb-3" style="max-width: 800px;">
+                                                            <div class="row g-0 ">
+                                                                <div class="col-md-4 ">
+                                                                    <!-- The Gallery as inline carousel, can be positioned anywhere on the page -->
 
 
-                                                    <img data-bs-toggle="modal" data-bs-target="#exampleModal"
-                                                        src="/data/uploads/t3.png" style="width:100%"
-                                                        onclick="openModal();currentSlide(1)"
-                                                        class="hover-shadow cursor">
+                                                                    <img data-bs-toggle="modal"
+                                                                        data-bs-target="#exampleModal"
+                                                                        src='/data/uploads/<%= fotografije[0].naziv_fotografije %>'
+                                                                        style="width:100%" class="hover-shadow cursor">
 
-                                                    <%- include('../partials/galerija.ejs') %>
+                                                                    <%- include('../partials/galerija.ejs', {ft:
+                                                                        fotografije}) %>
 
-                                                </div>
-                                                <div class="col-md-8 ">
-                                                    <div class="card-body ">
-                                                        <div class="row m-2">
-                                                            <div class="col-auto card text-dark bg-light mb-1 text-center m-2"
-                                                                style="max-width: 8rem;">
-                                                                <div class="card-header">
-                                                                    <h5>Cijena</h5>
                                                                 </div>
-                                                                <div class="card-body">
+                                                                <div class="col-md-8 ">
+                                                                    <div class="card-body ">
+                                                                        <div class="card-group m-2">
+                                                                            <div class=" card text-dark bg-light mb-1 text-center m-2"
+                                                                                style="max-width: 8rem;">
+                                                                                <div class="card-header">
+                                                                                    <h5>Cijena</h5>
+                                                                                </div>
+                                                                                <div class="card-body">
 
-                                                                    <p class="card-text">
-                                                                    <h5 style="color: #b12704;">500 KM</h5>
-                                                                    </p>
+                                                                                    <p class="card-text">
+                                                                                    <h5 style="color: #b12704;">
+                                                                                        <%= artikal.cijena %> KM
+                                                                                    </h5>
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class=" card text-dark bg-light mb-1 text-center m-2"
+                                                                                style="max-width: 8rem;">
+                                                                                <div class="card-header">
+                                                                                    <h5>Kolicina</h5>
+                                                                                </div>
+                                                                                <div class="card-body">
+
+                                                                                    <p class="card-text">
+                                                                                    <h5 style="color: #b12704;">
+                                                                                        <%= artikal.kolicina %>
+                                                                                    </h5>
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class=" card text-dark bg-light mb-1 text-center m-2"
+                                                                                style="max-width: 8rem;">
+                                                                                <div class="card-header">
+                                                                                    <h5>Stanje</h5>
+                                                                                </div>
+                                                                                <div class="card-body">
+
+                                                                                    <p class="card-text">
+                                                                                    <h5 style="color: #b12704;">
+                                                                                        <%= artikal.stanje===1
+                                                                                            ?"Novo":"Korišteno" %>
+                                                                                            %>
+                                                                                    </h5>
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+
+
+
+
+                                                                        </div>
+                                                                        <div class="card-group  m-2">
+                                                                            <div class=" card text-dark bg-light mb-1 text-center m-2"
+                                                                                style="max-width: 13rem;">
+                                                                                <div class="card-header">
+                                                                                    <h5>Lokacija</h5>
+                                                                                </div>
+                                                                                <div class="card-body">
+
+                                                                                    <p class="card-text">
+                                                                                    <h5 style="color: #b12704;">
+                                                                                        <%= artikal.adresa_poslovnice
+                                                                                            + ', ' + artikal.naziv_grada
+                                                                                            %>
+                                                                                    </h5>
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div
+                                                                                class=" card text-dark bg-light mb-1 text-center m-2">
+                                                                                <div class="card-header">
+                                                                                    <h5>Datum objave</h5>
+                                                                                </div>
+                                                                                <div class="card-body">
+
+                                                                                    <p class="card-text">
+                                                                                    <h5 style="color: #b12704;">
+                                                                                        <%= artikal.zadnja_promjena %>
+                                                                                    </h5>
+                                                                                    </p>
+                                                                                </div>
+                                                                            </div>
+
+
+                                                                        </div>
+
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-auto card text-dark bg-light mb-1 text-center m-2"
-                                                                style="max-width: 8rem;">
-                                                                <div class="card-header">
-                                                                    <h5>Kolicina</h5>
-                                                                </div>
-                                                                <div class="card-body">
-
-                                                                    <p class="card-text">
-                                                                    <h5 style="color: #b12704;">500 KM</h5>
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-auto card text-dark bg-light mb-1 text-center m-2"
-                                                                style="max-width: 8rem;">
-                                                                <div class="card-header">
-                                                                    <h5>Stanje</h5>
-                                                                </div>
-                                                                <div class="card-body">
-
-                                                                    <p class="card-text">
-                                                                    <h5 style="color: #b12704;">500 KM</h5>
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-
-
-
-
                                                         </div>
-                                                        <div class="row  m-2">
-                                                            <div class="col-auto card text-dark bg-light mb-1 text-center m-2"
-                                                                style="max-width: 13rem;">
-                                                                <div class="card-header">
-                                                                    <h5>Lokacija</h5>
-                                                                </div>
-                                                                <div class="card-body">
+                                                    </div>
 
-                                                                    <p class="card-text">
-                                                                    <h5 style="color: #b12704;">Gornji Velesici do 130
-                                                                        Sarajevo
-                                                                    </h5>
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-                                                            <div
-                                                                class="col-auto card text-dark bg-light mb-1 text-center m-2">
-                                                                <div class="card-header">
-                                                                    <h5>Datum objave</h5>
-                                                                </div>
-                                                                <div class="card-body">
-
-                                                                    <p class="card-text">
-                                                                    <h5 style="color: #b12704;">500 KM</h5>
-                                                                    </p>
-                                                                </div>
-                                                            </div>
-
-
-                                                        </div>
-
+                                                    <div id="opis" class="container tab-pane fade"><br>
+                                                        <h3></h3>
+                                                        <p>
+                                                            <%= artikal.opis_artikla %>
+                                                        </p>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div id="opis" class="container tab-pane fade"><br>
-                                        <h3></h3>
-                                        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium
-                                            doloremque laudantium,
-                                            totam
-                                            rem aperiam.</p>
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
                         <div class="col-md-3 col-sm-6  border mx-2 mx-auto">
-                            <h4 style="color: #b12704;">45 KM
+                            <h4 style="color: #b12704;">
+                                <%= artikal.cijena %> KM
                             </h4>
-                            <h5 class=" text-success ">Ostalo 17 artikala na stanju.
+                            <h5 class=" text-success ">Ostalo <%= artikal.kolicina %> artikala na stanju.
                             </h5>
                             <!-- Example single danger button -->
                             <div class="input-group mb-3">
                                 <span class="input-group-text" id="basic-addon1">Kolicina: </span>
                                 <select class="form-select form-select-sm" aria-label=".form-select-sm example">
-                                    <option selected>1</option>
-                                    <option value="1">2</option>
-                                    <option value="2">3</option>
-                                    <option value="3">4</option>
+                                    <% for(let i=0;i<artikal.kolicina;i++ ){ if(i>= 10){break;} %>
+                                        <option selected>
+                                            <%= i+1 %>
+                                        </option>
+                                        <% } %>
                                 </select>
                             </div>
                             <div class="">
@@ -270,7 +292,8 @@
                             </div>
 
                             <div class="card mt-4" style="width: 18rem;">
-                                <img src="/data/uploads/t3.png" class="card-img-top" alt="...">
+                                <img src="/data/uploads/<%= artikal.url_profilna_slika %> " class="card-img-top"
+                                    alt="...">
                                 <div class="card-body">
                                     <div class="d-grid gap-2">
                                         <button class="btn btn-primary" type="button">Prikaži trgovinu</button>
