@@ -81,7 +81,7 @@ exports.db_funkcije = {
 
     dohvatiArtikle: (trgovina_id) => {
         return new Promise((resolve, reject) => {
-            pool.query('select * from artikli as ar inner join glavne_kategorije as gk on ar.kategorija_id = gk.id_kategorije left join lokacije_trgovina lt on ar.lokacija = lt.id_lokacije where ar.trgovina_id = $1', [trgovina_id], (err, result) => {
+            pool.query('select * from artikli_data where trgovina_id = $1', [trgovina_id], (err, result) => {
                 if (err) {
                     return reject(err);
                 }
@@ -207,7 +207,7 @@ exports.db_funkcije = {
 
     dohvatiPodatkeOTrgovini: (trgovina_id) => {
         return new Promise((resolve, reject) => {
-            pool.query("select * from korisnici kr inner join trgovine tr on kr.id = tr.korisnik_id left join lokacije_trgovina lt on tr.id = lt.trgovina_id inner join gradovi_lk gr on gr.id_grada = lt.grad inner join kantoni_lk ka on gr.kanton = ka.id_kantona where tr.id = $1", [trgovina_id], (err, result) => {
+            pool.query("select * from korisnici kr inner join trgovine tr on kr.id = tr.korisnik_id left join lokacije_trgovina lt on tr.t_id = lt.trgovina_id inner join gradovi_lk gr on gr.id_grada = lt.grad inner join kantoni_lk ka on gr.kanton = ka.id_kantona where tr.t_id = $1", [trgovina_id], (err, result) => {
                 if (err) {
                     console.log("Error pri dohvacanju podataka o trgovini!");
                     return reject(err);
@@ -350,9 +350,31 @@ exports.db_funkcije = {
         })
     },
 
+    pretraziPoKategoriji: (id_kategorije) => {
+        return new Promise((resolve, reject) => {
+            pool.query("select * from artikli_data where kategorija_id = $1", [id_kategorije], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    },
 
+    dohvatiSveTrgovine: () => {
+        return new Promise((resolve, reject) => {
+            pool.query("select * from trgovine tr inner join korisnici kr on tr.korisnik_id = kr.id", (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    },
 
 };
+
+
 
 //module.exports = pool;
 
