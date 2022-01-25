@@ -28,7 +28,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 const rute_dostupne_svima = ['/', '/login', '/login/logout', '/register/user', '/register/trgovina'];
-const kupac_rute = [];
+const kupac_rute = ['/pocetna', '/pocetna/interesi'];
 const trgovac_rute = ['/trgovina', '/trgovina/delete', '/trgovina/narudzbe', '/trgovina/postavke', '/trgovina/profilna',];
 const admin_rute = [];
 
@@ -41,7 +41,7 @@ app.use(function (req, res, next) {
   dotenv.config();
   const JWT_TOKEN = process.env.JWT_TOKEN_SECRET;
 
-  return next();
+
   //---------------------
   /*
     Provjeravamo da li korisnik ima validan auth token. U slucaju da ga nema ili da je token zbog neceg ne važi onda ga propustamo na dozvoljenu rutu ili redirektamo na login formu.
@@ -99,12 +99,13 @@ app.use(function (req, res, next) {
   try {
     req.rola = decoded.tip;
     req.korisnik = decoded;
+
     if (req.rola === 2) {
       req.trgovina = jwt.verify(req.cookies.trgToken, JWT_TOKEN);
     }
   } catch (err) {
     console.log("CATCH 1");
-    res.redirect('/');
+    return res.redirect('/');
   }
 
   if (req.rola === 1 && admin_rute.includes(url)) {
@@ -125,7 +126,7 @@ app.use(function (req, res, next) {
     return res.redirect('/trgovina');
   }
   else if (req.rola === 3) {
-    return res.redirect('/trgovina');
+    return res.redirect('/pocetna');
   }
 
   return next();

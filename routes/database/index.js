@@ -372,6 +372,72 @@ exports.db_funkcije = {
         })
     },
 
+    dodajTagove: (tagovi, id_artikla) => {
+        let upit = "INSERT INTO artikal_tagovi (at_id_artikla, at_tag) VALUES";
+        let vrijednosti = [];
+        let brojac = 0;
+        console.log("Duzina", tagovi.length);
+        for (let i = 0; i < tagovi.length * 2; i += 2) {
+            upit += `($${i + 1}, $${i + 2})`;
+            if (i !== (tagovi.length * 2) - 2) {
+                upit += ",";
+            }
+            vrijednosti.push(id_artikla, tagovi[brojac].value);
+            brojac++;
+        }
+        upit += ';';
+
+
+        return new Promise((resolve, reject) => {
+            pool.query(upit, vrijednosti, (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve();
+            })
+        })
+    },
+
+    dodajInterese: (interesi, korisnik) => {
+        let upit = "INSERT INTO interesi_kupaca (ik_korisnik_id, ik_interes) VALUES";
+        let vrijednosti = [];
+        let brojac = 0;
+        console.log("Duzina", interesi.length);
+        for (let i = 0; i < interesi.length * 2; i += 2) {
+            upit += `($${i + 1}, $${i + 2})`;
+            if (i !== (interesi.length * 2) - 2) {
+                upit += ",";
+            }
+            vrijednosti.push(korisnik.id, interesi[brojac].value);
+            brojac++;
+        }
+        upit += ';';
+
+
+        return new Promise((resolve, reject) => {
+            pool.query(upit, vrijednosti, (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve();
+            })
+        })
+    },
+
+    promjeniFirstLogin: (korisnik) => {
+        console.log(korisnik.email)
+        let upit = `UPDATE korisnici SET first_login = false WHERE id = ${korisnik.id};`
+        return new Promise((resolve, reject) => {
+            pool.query(upit, (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve();
+            })
+        })
+    }
+
+
 };
 
 

@@ -14,6 +14,12 @@
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
     <link href="/stylesheets/pocetna_kupac.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <% if (first_login===true) { %>
+        <script src="https://unpkg.com/@yaireo/tagify"></script>
+        <script src="https://unpkg.com/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
+        <link href="https://unpkg.com/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
+        <% } %>
 </head>
 
 <body>
@@ -72,21 +78,59 @@
         </div>
 
 
+        <% if(first_login===true) {%>
+            <%- include('../partials/modal_za_interese.ejs')%>
+                <% } %>
 
+                    <script>
+                        (function () {
+                            'use strict'
 
-        <script>
-            (function () {
-                'use strict'
+                            document.querySelector('#navbarSideCollapse').addEventListener('click', function () {
+                                console.log("Open");
+                                document.querySelector('.offcanvas-collapse').classList.toggle('open')
+                            })
+                        })()
 
-                document.querySelector('#navbarSideCollapse').addEventListener('click', function () {
-                    console.log("Open");
-                    document.querySelector('.offcanvas-collapse').classList.toggle('open')
-                })
-            })()
+                        $(window).on('load', function () {
+                            $('#staticBackdrop').modal('show');
+                        });
+                    </script>
+                    <% if (first_login===true) { %>
+                        <script>
+                            var input = document.querySelector('input[name=basic]');
 
+                            // initialize Tagify on the above input node reference
+                            var tg_input = new Tagify(input);
+                            $('input[name=basic]').on('change', (event) => {
+                                console.log("promjena")
+                                event.preventDefault();
+                                if ($('input[name=basic]').val().length > 0) {
+                                    $('#nextButton').attr('disabled', false);
+                                } else {
+                                    $('#nextButton').attr('disabled', true);
+                                }
+                            });
 
-        </script>
+                            const posaljiInterese = () => {
+                                $.post("/pocetna/interesi",
+                                    {
+                                        tagovi: JSON.stringify(tg_input.value),
+                                    },
+                                    function (data, status) {
+                                        if (status == 'success') {
+                                            location.reload();
+                                        }
+                                        else {
+                                            console.log("greska kategorije");
+                                            // doslo je do greske
+                                        }
 
+                                    });
+                            };
+
+                        </script>
+                        <% } %>
 </body>
 
 </html>

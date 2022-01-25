@@ -62,15 +62,22 @@
                               </span>
                             </div>
                           </div>
-                          <div class="row">
-                            <% for(let i=0;i<trgovina.length;i++) {%>
-                              <div class="input-group input-group-sm mb-3 col m-2">
-                                <span class="input-group-text col" id="basic-addon3">Poslovnica #<%= i+1 %> </span>
-                                <span class="input-group-text col overflow-hidden " id="basic-addon3">
-                                  <%= trgovina[i].adresa_poslovnice + ", " + trgovina[i].naziv_grada %>
-                                </span>
-                              </div>
-                              <% } %>
+                          <div class="container">
+                            <div class="row row-cols-1 row-cols-sm-1 row-cols-md-2 mx-auto">
+                              <% for(let i=0;i<trgovina.length;i++) {%>
+
+                                <div class="col">
+                                  <div class="input-group input-group-sm m-2">
+                                    <span class="input-group-text " id="basic-addon3">Poslovnica #<%= i+1 %> </span>
+                                    <span class="input-group-text  overflow-hidden " id="basic-addon3">
+                                      <%= trgovina[i].adresa_poslovnice + ", " + trgovina[i].naziv_grada %>
+                                    </span>
+                                  </div>
+                                </div>
+
+
+                                <% } %>
+                            </div>
                           </div>
 
                         </div>

@@ -52,9 +52,9 @@ router.get('/', function (req, res, next) {
 
 
 /* Ruta za dodavanje artikla */
-router.post('/dodaj_artikal', /*upload.array("file", 12)*/ upload.any(), function (req, res, next) {
+router.post('/dodaj_artikal', /*upload.array("file", 12)*/ upload.any(), async function (req, res, next) {
     console.log("Dodavanje artikla sa slikama");
-    console.log(req.fotografije);
+
     var artikal = {
         trgovina_id: 3,
         naziv: req.body.naziv,
@@ -64,7 +64,12 @@ router.post('/dodaj_artikal', /*upload.array("file", 12)*/ upload.any(), functio
         kategorija_id: req.body.kategorija,
         lokacija: req.body.lokacija,
         opis: req.body.opis,
+        tagovi: JSON.parse(req.body.tagovi),
     };
+
+    console.log("Duzina", artikal.tagovi.length)
+    let tagovi = await db_funkcije.dodajTagove(artikal.tagovi, 1000);
+    return res.sendStatus(200);
     //console.log(artikal);
 
     db_funkcije.dodajArtikal(artikal).then((id_artikla) => {

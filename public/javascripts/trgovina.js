@@ -38,7 +38,7 @@ const srediModal = (artikal, naslov_modala, akcija) => {
         if ($('.accordion-button').attr("aria-expanded") === "true") {
             $('.accordion-button').click();
         }
-
+        tg_input.removeAllTags();
 
 
     }
@@ -52,6 +52,8 @@ const srediModal = (artikal, naslov_modala, akcija) => {
         $("#opis").val("");
         $('#inputGroupFile01').val("");
         $('#accordionExample').hide();
+        $('#uplFotografije').html("");
+        tg_input.removeAllTags();
         t_lokacija = 1;
     }
     dohvaceneFotografije = false;
@@ -82,7 +84,7 @@ const dohvatiLokacije = () => {
         function (data, status) {
             if (status == 'success') {
                 lokacije = data;
-                console.log(data);
+                //console.log(data);
                 for (let i = 0; i < lokacije.length; i++) {
                     $("#lokacija").append(`<option value = ${lokacije[i].id_lokacije}>${lokacije[i].adresa_poslovnice}</option>`);
                 }
@@ -99,6 +101,7 @@ const dohvatiLokacije = () => {
 
 // funkcija dodaje/uredjuje artikal
 const dodajArtikal = (akcija) => {
+
     let ruta = "/trgovina/dodaj_artikal";
     if (akcija === 'edit') {
         ruta = "/trgovina/uredi_artikal";
@@ -111,7 +114,8 @@ const dodajArtikal = (akcija) => {
         fd.append("file", files[i], files[i].name);
     }
 
-    console.log("Kategorija ", $("#kategorija").val());
+    let tmp = [];
+
     let data = {
         naziv: $("#naziv").val(),
         cijena: $("#cijena").val(),
@@ -121,11 +125,14 @@ const dodajArtikal = (akcija) => {
         lokacija: $("#lokacija").val(),
         opis: $("#opis").val(),
         id_artikla: id_artikla,
+        tagovi: JSON.stringify(tg_input.value),
     };
+    console.log(tmp);
 
     for (const property in data) {
         fd.append(property.toString(), data[property]);
     }
+
 
     $.ajax({
         url: ruta,

@@ -5,10 +5,16 @@ const { db_funkcije } = require('.././database/index.js');
 
 
 router.get('/', function (req, res, next) {
+    if (req.cookies.firstLogin === "true") {
+        req.cookies.firstLogin = true;
+    }
+    else {
+        req.cookies.firstLogin = false;
+    }
     db_funkcije.dohvatiArtikle(3).then((result) => {
         //console.log(result);
         //console.log(result[0]);
-        res.render('kupac/pocetna', { title: 'Web Shop', artikli: result });
+        res.render('kupac/pocetna', { title: 'Web Shop', artikli: result, first_login: req.cookies.firstLogin });
     }).catch((error) => {
         console.log(error);
         res.sendStatus(404);
@@ -63,6 +69,24 @@ router.get('/trgovine/:id_trgovine', async function (req, res, next) {
     }
 
 });
+
+router.post('/interesi', async function (req, res, next) {
+    let interesi = JSON.parse(req.body.tagovi);
+    console.log(interesi);
+    try {
+        const inte = await db_funkcije.dodajInterese(interesi, req.korisnik);
+        const fl = await db_funkcije.promjeniFirstLogin(req.korisnik);
+        req.cookies.firstLogin
+        res.clearCookie("firstLogin");
+        res.cookie('firstLogin', false);
+        res.sendStatus(200);
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+
+});
+
 
 
 module.exports = router;
