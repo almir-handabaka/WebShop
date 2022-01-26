@@ -82,9 +82,6 @@ app.use(function (req, res, next) {
   }
 
 
-
-
-
   //---------------------
 
   /*
@@ -107,6 +104,8 @@ app.use(function (req, res, next) {
     console.log("CATCH 1");
     return res.redirect('/');
   }
+
+  return next();
 
   if (req.rola === 1 && admin_rute.includes(url)) {
     return next();

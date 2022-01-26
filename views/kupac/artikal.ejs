@@ -16,6 +16,8 @@
     <link href="/stylesheets/pocetna_kupac.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="/javascripts/artikal.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <style>
         .checked {
             color: orange;
@@ -215,7 +217,8 @@
                                 </div>
 
                                 <div class="d-grid gap-2">
-                                    <button class="btn btn-warning" type="button">Dodaj u korpu</button>
+                                    <button class="btn btn-warning" type="button"
+                                        onclick="dodajUKorpu('<%=artikal.id_artikla%>')">Dodaj u korpu</button>
                                 </div>
 
                                 <div class="card mt-4" style="width: 18rem;">
@@ -223,7 +226,9 @@
                                         alt="...">
                                     <div class="card-body">
                                         <div class="d-grid gap-2">
-                                            <button class="btn btn-primary" type="button">Prikaži trgovinu</button>
+                                            <button class="btn btn-primary" type="button"
+                                                onclick="window.location.href = '/pocetna/trgovine/<%=artikal.trgovina_id %>'">Prikaži
+                                                trgovinu</button>
                                             <button class="btn btn-success" type="button">Pošalji poruku</button>
                                         </div>
                                     </div>

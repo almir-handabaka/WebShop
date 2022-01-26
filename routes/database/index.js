@@ -330,7 +330,7 @@ exports.db_funkcije = {
 
     dohvatiArtikal: (artikal_id) => {
         return new Promise((resolve, reject) => {
-            pool.query("select * from artikli ar left join lokacije_trgovina lt on ar.lokacija = lt.id_lokacije inner join gradovi_lk gl on lt.grad = gl.id_grada inner join trgovine t on ar.trgovina_id = t.id inner join korisnici kr on kr.id = t.korisnik_id where ar.id_artikla = $1", [artikal_id], (err, result) => {
+            pool.query("select * from artikli ar left join lokacije_trgovina lt on ar.lokacija = lt.id_lokacije inner join gradovi_lk gl on lt.grad = gl.id_grada inner join trgovine t on ar.trgovina_id = t.t_id inner join korisnici kr on kr.id = t.korisnik_id where ar.id_artikla = $1", [artikal_id], (err, result) => {
                 if (err) {
                     return reject(err);
                 }
@@ -411,7 +411,7 @@ exports.db_funkcije = {
             vrijednosti.push(korisnik.id, interesi[brojac].value);
             brojac++;
         }
-        upit += ';';
+        upit += ' RETURNING ik_id;';
 
 
         return new Promise((resolve, reject) => {
@@ -419,7 +419,7 @@ exports.db_funkcije = {
                 if (err) {
                     return reject(err);
                 }
-                return resolve();
+                return resolve(result.rows);
             })
         })
     },
@@ -435,8 +435,40 @@ exports.db_funkcije = {
                 return resolve();
             })
         })
-    }
+    },
 
+    dohvatiSveOKorisniku: (korisnik) => {
+        return new Promise((resolve, reject) => {
+            pool.query("select * from kupac_data where id = $1", [korisnik.id], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    },
+
+    izbrisiInteres: (interes_id, korisnik) => {
+        return new Promise((resolve, reject) => {
+            pool.query("delete from interesi_kupaca where ik_id = $1 and ik_korisnik_id = $2", [interes_id, korisnik.id], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    },
+
+    dodajUKorpu: (narudzba, korisnik) => {
+        return new Promise((resolve, reject) => {
+            pool.query("INSERT INTO korpa (ko_artikal_id, ko_id_korisnik, ko_kolicina, ko_cijena) VALUES($1,$2,$3,$4)", [narudzba.artikal_id, korisnik.id, artikal.kolicina, artikal.cijena], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    },
 
 };
 

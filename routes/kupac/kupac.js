@@ -74,19 +74,56 @@ router.post('/interesi', async function (req, res, next) {
     let interesi = JSON.parse(req.body.tagovi);
     console.log(interesi);
     try {
-        const inte = await db_funkcije.dodajInterese(interesi, req.korisnik);
-        const fl = await db_funkcije.promjeniFirstLogin(req.korisnik);
-        req.cookies.firstLogin
-        res.clearCookie("firstLogin");
-        res.cookie('firstLogin', false);
-        res.sendStatus(200);
+        const interes_tmp = await db_funkcije.dodajInterese(interesi, req.korisnik);
+        console.log("Interesi id ", interes_tmp);
+        if (req.cookies.firstLogin === "true") {
+            const fl = await db_funkcije.promjeniFirstLogin(req.korisnik);
+            res.clearCookie("firstLogin");
+            res.cookie('firstLogin', false);
+            res.status(200).json(interes_tmp);
+
+        } else {
+            res.status(200).json(interes_tmp);
+        }
     } catch (error) {
         console.log(error);
-        next(error);
+        //next(error);
+        res.sendStatus(404);
     }
 
 });
 
+router.get('/postavke', async function (req, res, next) {
+    try {
+        const korisnik_data = await db_funkcije.dohvatiSveOKorisniku(req.korisnik);
+        console.log(korisnik_data);
+        res.render('kupac/postavke', { title: 'Web Shop', korisnik: korisnik_data });
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+});
+
+router.post('/postavke/detalji', function (req, res, next) {
+    let broj_mobitela = req.body.kontakt_telefon;
+    db_funkcije.promjeniBrojKorisnika(broj_mobitela, req.korisnik.email).then(() => {
+        console.log("Korisnik detalji uspjesno promjenjeni!");
+        res.sendStatus(200);
+    }).catch((error) => {
+        res.sendStatus(404);
+    });
+});
+
+
+router.post('/interesi/delete', function (req, res, next) {
+    let interes_id = req.body.interes_id;
+    db_funkcije.izbrisiInteres(interes_id, req.korisnik).then(() => {
+        console.log("Interes uspjesno izbrisan!");
+        res.sendStatus(200);
+    }).catch((error) => {
+        res.sendStatus(404);
+    });
+});
 
 
 module.exports = router;

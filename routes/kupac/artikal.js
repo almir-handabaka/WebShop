@@ -72,6 +72,22 @@ router.get('/:artikal_id', async function (req, res, next) {
 });
 
 
+router.get('/korpa/dodaj', async function (req, res, next) {
+    try {
+        let artikal_id = req.params.id_artikla;
+        let artikal = await db_funkcije.dodajUKorpu(artikal_id, korisnik);
+        
+        res.sendStatus(200);
+        
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(404);
+    }
+
+
+});
+
+
 
 
 

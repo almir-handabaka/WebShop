@@ -1,5 +1,5 @@
 const kupac = {
-    pocetna_stranica: require('./pocetna'),
+    pocetna_stranica: require('./kupac'),
     artikal: require('./artikal'),
 };
 

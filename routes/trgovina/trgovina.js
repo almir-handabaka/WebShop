@@ -143,7 +143,7 @@ router.get('/postavke', async function (req, res, next) {
     const gradIKanton = await db_funkcije.dohvatiGradoveIKantone();
     const kanton = gradIKanton[0].rows;
     const grad = gradIKanton[1].rows;
-    //console.log(result);
+    console.log(result);
 
     res.render('trgovina/postavke', { data: result, kanton: kanton, grad: grad, title: "Postavke - Web Shop" });
 
@@ -153,8 +153,8 @@ router.get('/postavke', async function (req, res, next) {
 
 //const upload = multer({ dest: './public/data/uploads/' });
 router.post('/profilna', upload.single('avatar'), function (req, res, next) {
-    let email = "almir.a@gmail.ba";
-    db_funkcije.sacuvajProfilnu(email, req.fotografije).then(() => {
+
+    db_funkcije.sacuvajProfilnu(req.korisnik.email, req.fotografije).then(() => {
         res.sendStatus(200);
     }).catch((error) => {
         console.log(error);
@@ -285,8 +285,6 @@ router.post('/postavke/detalji', function (req, res, next) {
         console.log(error);
         res.sendStatus(404);
     })
-
-
 
 });
 

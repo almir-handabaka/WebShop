@@ -15,7 +15,7 @@
         crossorigin="anonymous"></script>
     <link href="/stylesheets/pocetna_kupac.css" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <% if (first_login===true) { %>
+    <% if (typeof (first_login) !=='undefined' && first_login===true) { %>
         <script src="https://unpkg.com/@yaireo/tagify"></script>
         <script src="https://unpkg.com/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
         <link href="https://unpkg.com/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
@@ -78,7 +78,7 @@
         </div>
 
 
-        <% if(first_login===true) {%>
+        <% if(typeof (first_login) !=='undefined' && first_login===true) {%>
             <%- include('../partials/modal_za_interese.ejs')%>
                 <% } %>
 
@@ -96,7 +96,7 @@
                             $('#staticBackdrop').modal('show');
                         });
                     </script>
-                    <% if (first_login===true) { %>
+                    <% if (typeof (first_login) !=='undefined' && first_login===true) { %>
                         <script>
                             var input = document.querySelector('input[name=basic]');
 
