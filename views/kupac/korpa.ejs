@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= title %>
+  </title>
+  <!-- JQUERY -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <!-- BOOTSTRAP -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+  <!-- FONT AWESOME -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!-- TOASTR -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+
+
+  <style>
+  </style>
+
+</head>
+
+<body>
+
+  <%- include('../partials/kupac_hm.ejs') %>
+    <br><br>
+
+
+    <div class="px-4 py-1 my-5 ">
+      <div class="col-lg-10 mx-auto">
+        <div class="album py-2">
+          <div class="container">
+
+            <div class=" bg-white">
+
+              <div
+                class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h2"></h1>
+                <div class="btn-toolbar mb-2 mb-md-0 ">
+
+                  <button type="button" class="btn btn-md btn-success" onclick="zakljuciNarudzbu()">
+                    Zaključi narudžbu
+                  </button>
+                </div>
+              </div>
+
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Proizvod</th>
+                    <th scope="col">Količina</th>
+                    <th scope="col">Cijena/1</th>
+                    <th scope="col">Totalni iznos</th>
+                    <th scope="col">X</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% for(let i=0;i<korpa.length;i++) {%>
+                    <tr id="korpa<%=korpa[i].ko_id_korpe%>">
+                      <th scope="row">
+                        <%= i+1 %>
+                      </th>
+                      <td>
+                        <img src="/data/uploads/<%= korpa[i].thumbnail %>" alt="..." class="img-thumbnail"
+                          style="max-height: 75px; max-width: 75px;">
+                        <%= korpa[i].naziv_artikla %>
+                      </td>
+                      <td>
+                        <%= korpa[i].ko_kolicina %>
+                      </td>
+                      <td>
+                        <%= korpa[i].ko_cijena %>
+                      </td>
+                      <td>
+                        <%= korpa[i].ko_kolicina * korpa[i].ko_cijena %>
+                      </td>
+                      <td>
+                        <button type="button" class="btn-close" aria-label="Close"
+                          onclick="izbrisiIzKorpe('<%= korpa[i].ko_id_korpe%>')"></button>
+                      </td>
+                    </tr>
+                    <% } %>
+
+                </tbody>
+              </table>
+
+
+
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+
+    <script src="/javascripts/artikal.js"></script>
+</body>
+
+</html>

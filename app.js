@@ -8,7 +8,7 @@ var jwt = require('jsonwebtoken');
 
 const { loginRouter, registerRouter } = require('./routes/auth');
 const { pocetna_stranica, artikal } = require('./routes/kupac');
-
+const { administrator } = require('./routes/administrator');
 
 var indexRouter = require('./routes/prijava');
 //var naslovnaRouter = require('./routes/naslovna');
@@ -139,7 +139,7 @@ app.use('/register', registerRouter);
 app.use('/trgovina', trgovinaRouter);
 app.use('/pocetna', pocetna_stranica);
 app.use('/artikal', artikal);
-
+app.use('/admin', administrator);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

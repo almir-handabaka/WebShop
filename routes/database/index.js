@@ -461,7 +461,7 @@ exports.db_funkcije = {
 
     dodajUKorpu: (narudzba, korisnik) => {
         return new Promise((resolve, reject) => {
-            pool.query("INSERT INTO korpa (ko_artikal_id, ko_id_korisnik, ko_kolicina, ko_cijena) VALUES($1,$2,$3,$4)", [narudzba.artikal_id, korisnik.id, artikal.kolicina, artikal.cijena], (err, result) => {
+            pool.query("INSERT INTO korpa (ko_artikal_id, ko_id_korisnik, ko_kolicina, ko_cijena) VALUES($1,$2,$3,$4)", [narudzba.artikal_id, korisnik.id, narudzba.kolicina, narudzba.cijena], (err, result) => {
                 if (err) {
                     return reject(err);
                 }
@@ -469,6 +469,39 @@ exports.db_funkcije = {
             })
         })
     },
+
+    dohvatiKorpu: (korisnik) => {
+        return new Promise((resolve, reject) => {
+            pool.query("SELECT * FROM korpa_data kd inner join artikli ar on kd.ko_artikal_id = ar.id_artikla where ko_id_korisnik = $1", [korisnik.id], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    },
+
+    izbrisiIzKorpe: (id_korpe, korisnik) => {
+        return new Promise((resolve, reject) => {
+            pool.query("DELETE FROM korpa where ko_id_korpe = $1 and ko_id_korisnik = $2", [id_korpe, korisnik.id], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    },
+
+    potvrdiNarudzbu: (korisnik) => {
+        return new Promise((resolve, reject) => {
+            pool.query("DELETE FROM korpa where ko_id_korpe = $1 and ko_id_korisnik = $2", [id_korpe, korisnik.id], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    }
 
 };
 

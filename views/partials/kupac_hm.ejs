@@ -64,7 +64,15 @@
           <a class="nav-link active" href="#">Notifikacije</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="#">Korpa</a>
+          <a class="nav-link active" href="/artikal/korpa">Korpa <span id="brojArtikalaKorpa" class="badge bg-danger">
+              <% if (typeof broj_u_korpi !=='undefined' ) {%>
+                <%= broj_u_korpi %>
+                  <% } else { %>
+                    0
+                    <% } %>
+
+
+            </span></a>
         </li>
       </ul>
 
