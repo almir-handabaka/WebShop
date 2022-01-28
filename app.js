@@ -6,6 +6,9 @@ var logger = require('morgan');
 var dotenv = require('dotenv');
 var jwt = require('jsonwebtoken');
 
+const { sendMail } = require('./mailer');
+
+
 const { loginRouter, registerRouter } = require('./routes/auth');
 const { pocetna_stranica, artikal } = require('./routes/kupac');
 const { administrator } = require('./routes/administrator');
