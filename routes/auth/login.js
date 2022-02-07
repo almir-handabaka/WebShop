@@ -30,7 +30,7 @@ const generisiTokenTrgovac = (trgovina, remember_me, JWT_TOKEN) => {
 }
 
 
-// almir.handabaka@gmail.com    almir123
+// almir.handabaka@gmail.com    almir
 // almir.a@gmail.ba   almir321
 /* Auth logina i dodjela JWT tokena */
 router.post('/', function (req, res, next) {
@@ -60,6 +60,7 @@ router.post('/', function (req, res, next) {
                         if (result1[0].first_login === true) {
                             res.cookie('firstLogin', true);
                         }
+                        console.log("Korisnik logovan!");
                         if (korisnik.tip === 2) {
                             db_funkcije.dohvatiTrgovinu(korisnik.id).then((trgovina) => {
                                 let trgToken = generisiTokenTrgovac(trgovina[0], remember_me, JWT_TOKEN);

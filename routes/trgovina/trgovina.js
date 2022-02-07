@@ -5,6 +5,9 @@ var multer = require('multer');
 const { db_funkcije } = require('.././database/index.js');
 var path = require('path');
 
+//const { notifikacijeSocket } = require('../../sockets');
+
+
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './public/data/uploads/')
@@ -167,6 +170,17 @@ router.post('/profilna', upload.single('avatar'), function (req, res, next) {
 });
 
 router.get('/kategorije', function (req, res, next) {
+
+    const testToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIsImltZSI6IkFsbWlyIiwicHJlemltZSI6IkhhbmRhYmFrYSIsInRpcCI6MiwiZW1haWwiOiJhbG1pci5hQGdtYWlsLmJhIiwiZmlyc3RfbG9naW4iOmZhbHNlLCJpYXQiOjE2NDM0MTE1OTQsImV4cCI6MTY0NjAwMzU5NH0.jZBuu-xKgUrO0gs485Y6ZA-io61zXNgFouL3IaDkqGk";
+
+    try {
+        //notifikacijeSocket.io.pm(testToken, "Pozdrav trgovac, nadam se da sve radi!");
+
+    } catch (error) {
+        console.log(error);
+    }
+
+
     db_funkcije.dohvatiKategorije().then((result) => {
         res.send(result);
     }).catch((error) => {
@@ -289,6 +303,7 @@ router.post('/postavke/detalji', function (req, res, next) {
 });
 
 router.post('/postavke/poslovnica', function (req, res, next) {
+
     let poslovnica = JSON.parse(req.body.poslovnica);
     req.trgovina_id = 3;
 

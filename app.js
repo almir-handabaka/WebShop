@@ -9,9 +9,12 @@ var jwt = require('jsonwebtoken');
 const { sendMail } = require('./mailer');
 
 
+
+
 const { loginRouter, registerRouter } = require('./routes/auth');
 const { pocetna_stranica, artikal } = require('./routes/kupac');
 const { administrator } = require('./routes/administrator');
+const chat = require('./routes/chat');
 
 var indexRouter = require('./routes/prijava');
 //var naslovnaRouter = require('./routes/naslovna');
@@ -143,6 +146,7 @@ app.use('/trgovina', trgovinaRouter);
 app.use('/pocetna', pocetna_stranica);
 app.use('/artikal', artikal);
 app.use('/admin', administrator);
+app.use('/chat', chat);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

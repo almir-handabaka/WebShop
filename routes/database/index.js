@@ -501,7 +501,41 @@ exports.db_funkcije = {
                 return resolve(result.rows);
             })
         })
-    }
+    },
+
+    getPorukeOd: (korisnik, korisnik_id) => {
+        return new Promise((resolve, reject) => {
+            pool.query("SELECT * FROM chat WHERE c_od in ($1, $2) and c_ka in ($3, $4)", [korisnik_id, korisnik.id, korisnik_id, korisnik.id], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    },
+
+    getAktivnostPoruka: (korisnik) => {
+        return new Promise((resolve, reject) => {
+            pool.query("select * from aktivnostChata where (c_od = $1 or c_ka = $2) and id != $3;", [korisnik.id, korisnik.id, korisnik.id], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    },
+
+    sacuvajPoruku: (poruka, korisnik) => {
+        return new Promise((resolve, reject) => {
+            pool.query("INSERT INTO chat (c_od, c_ka, tekst_poruke) values ($1, $2, $3) RETURNING *", [korisnik.id, poruka.chat_id, poruka.tekst_poruke], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    },
+
 
 };
 

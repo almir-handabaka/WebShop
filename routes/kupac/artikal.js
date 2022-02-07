@@ -3,28 +3,6 @@ var router = express.Router();
 var date = require('date-and-time');
 const { db_funkcije } = require('.././database/index.js');
 
-/*
-  {
-    id_artikla: 103,
-    trgovina_id: 3,
-    kategorija_id: 1,
-    podkategorija_id: null,
-    naziv_artikla: 'padni bazo #3',
-    opis_artikla: 'padni bazo #3',
-    lokacija: 1,
-    stanje: 1,
-    cijena: 232323,
-    kolicina: 1,
-    datum_kreiranja: 2022-01-14T22:59:07.498Z,
-    zadnja_promjena: 2022-01-14T22:59:07.498Z
-  }
-
-*/
-
-
-// fotografije
-// podatke o artiklu i lokaciji i trgovini - artikal
-// broj ocjena, prosjecna ocjena - ocjene
 
 
 // ispis sadrzaja korpe

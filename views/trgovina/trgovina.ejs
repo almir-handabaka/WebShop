@@ -16,6 +16,12 @@
 
     <link href="/stylesheets/trgovac.css" rel="stylesheet">
 
+    <!-- Socket.io CDN -->
+    <script src="https://cdn.socket.io/4.4.1/socket.io.min.js"
+        integrity="sha384-fKnu0iswBIqkjxrhQCTZ7qlLHOFEgNkRmK2vaO/LbTZSXdJfAu6ewRBdwHPhBo/H"
+        crossorigin="anonymous"></script>
+
+
 
     <!-- Custom styles for this template -->
     <script src="/javascripts/trgovina.js"></script>
@@ -25,6 +31,8 @@
     <script src="https://unpkg.com/@yaireo/tagify/dist/tagify.polyfills.min.js"></script>
     <link href="https://unpkg.com/@yaireo/tagify/dist/tagify.css" rel="stylesheet" type="text/css" />
 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 </head>
 
 <body class="purple">
@@ -248,6 +256,8 @@
             // initialize Tagify on the above input node reference
             var tg_input = new Tagify(input);
         </script>
+        <!-- JS za socket.io notifikacije -->
+        <script src="/javascripts/notifikacije.js"></script>
 </body>
 
 </html>
