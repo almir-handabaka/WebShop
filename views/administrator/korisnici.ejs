@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= title %>
+  </title>
+  <!-- JQUERY -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <!-- BOOTSTRAP -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+    crossorigin="anonymous"></script>
+  <!-- FONT AWESOME -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+  <!-- TOASTR -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+  <link href="/stylesheets/pocetna_kupac.css" rel="stylesheet">
+
+  <style>
+  </style>
+
+</head>
+
+<body>
+
+  <%- include('../partials/admin_hm.ejs') %>
+    <br><br>
+
+
+    <div class="px-2 py-1 my-5 ">
+      <div class="col-lg-11 mx-auto">
+        <div class="album py-2">
+          <div class="container">
+
+            <div class=" bg-white">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Ime i prezime</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Tip korisnika</th>
+                    <th scope="col">Broj mobitela</th>
+                    <th scope="col">Status profila</th>
+                    <th scope="col">Akcija</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% for( let i=0; i < korisnici.length; i++ ) { %>
+                    <tr>
+                      <th>
+                        <%= i + 1 %>
+                      </th>
+                      <td>
+
+                        <%= korisnici[i].ime + " " + korisnici[i].prezime %>
+
+                      </td>
+                      <td>
+                        <%= korisnici[i].email %>
+                      </td>
+                      <td>
+                        <% if (korisnici[i].tip_korisnika===1) { %>
+                          <%= "Administrator" %>
+                            <%} else if(korisnici[i].tip_korisnika===2) {%>
+                              <%= "Trgovac" %>
+                                <%} else{ %>
+                                  <%="Kupac" %>
+                                    <% } %>
+                      </td>
+                      <td>
+                        <%= korisnici[i].broj_mobitela %>
+                      </td>
+                      <td id="statusProfila<%=korisnici[i].id %>">
+                        <% if(korisnici[i].status_profila===1) {%>
+                          <%= "Aktivan" %>
+                            <%} else if(korisnici[i].status_profila===2) {%>
+                              <%= "Permanent ban" %>
+                                <%} else{ %>
+                                  <%="Temporary ban - 15 dana" %>
+                                    <% } %>
+
+
+                      </td>
+                      <td>
+                        <button type="button" class="btn btn-danger"
+                          onclick="blokirajKorisnika(2, '<%= korisnici[i].id %>')">Blokiraj</button>
+                        <button type="button" class="btn btn-primary"
+                          onclick="blokirajKorisnika(3, '<%= korisnici[i].id %>')">Blokiraj - 15
+                          dana</button>
+                        <button type="button" class="btn btn-success"
+                          onclick="blokirajKorisnika(1, '<%= korisnici[i].id %>')">Unban</button>
+                      </td>
+                    </tr>
+                    <% } %>
+
+                </tbody>
+              </table>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <script src="/javascripts/administrator.js"></script>
+</body>
+
+</html>

@@ -95,11 +95,11 @@ router.post('/user', function (req, res, next) {
         }
     ).then((result) => {
         console.log(korisnik.ime, korisnik.prezime, " uspjesno registrovan");
-        res.send("Uspjesno");
+        res.redirect('/');
     }).catch((error) => {
         console.error("Korisnik sa istim emailom postoji u bazi!");
         console.log(error);
-        res.send("Fail"); // zamjeni sa redirektom
+        res.redirect('/'); // zamjeni sa redirektom
     });
 
 
@@ -136,11 +136,11 @@ router.post('/trgovina', function (req, res, next) {
     }).then((result) => {
         db_funkcije.dodajTrgovinu(korisnik.naziv_trgovine, result[0].id);
         console.log("Trgovac uspjesno registrovan");
-        res.send("Trgovac uspjesno registrovan");
+        res.redirect('/');
     }).catch((error) => {
         console.error("Trgovac sa istim emailom postoji u bazi!");
         console.log(error);
-        res.send("Fail"); // zamjeni sa redirektom
+        res.redirect('/'); // zamjeni sa redirektom
     });
 
 });
@@ -153,7 +153,7 @@ router.post('/promjena_sifre', function (req, res, next) {
         res.sendStatus(404);
     }
 
-    let email = "almir.a@gmail.ba"; // zamjeniti sa req.korisnik.email
+    let email = req.korisnik.email; // zamjeniti sa req.korisnik.email
     hashPassword(nova_sifra).then(
         (hash) => {
             return db_funkcije.promjeniSifru(email, hash);

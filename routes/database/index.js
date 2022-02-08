@@ -92,6 +92,19 @@ exports.db_funkcije = {
         })
     },
 
+    dohvatiArtikle: () => {
+        return new Promise((resolve, reject) => {
+            pool.query('select * from artikli_data', (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                //console.log(result.rows);
+
+                return resolve(result.rows);
+            })
+        })
+    },
+
     // update artikla
     updateArtikal: (artikal) => {
         console.log(artikal);
@@ -535,6 +548,74 @@ exports.db_funkcije = {
             })
         })
     },
+
+    getSvePoruke: () => {
+        return new Promise((resolve, reject) => {
+            pool.query("SELECT * FROM CHAT c INNER JOIN korisnici kr on c.c_od = kr.id", (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    },
+
+
+    dohvatiSveKorisnike: () => {
+        return new Promise((resolve, reject) => {
+            pool.query("SELECT * FROM korisnici", (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    },
+
+    promjeniStatusKorisnika: (novi_status, korisnik_id, banovan_do) => {
+        return new Promise((resolve, reject) => {
+            pool.query("UPDATE korisnici SET status_profila = $1, datum_isteka_zabrane = $2 WHERE id = $3 AND tip_korisnika != 1", [novi_status, banovan_do, korisnik_id], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    },
+
+    dohvatiSveNarudzbe: () => {
+        return new Promise((resolve, reject) => {
+            pool.query("SELECT * FROM narudzbe", (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    },
+
+    dodajKategoriju: (nova_kategorija) => {
+        return new Promise((resolve, reject) => {
+            pool.query("INSERT INTO glavne_kategorije (naziv_kategorije) VALUES($1) RETURNING *", [nova_kategorija], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    },
+
+    izbrisiKategoriju: (id_kategorije) => {
+        return new Promise((resolve, reject) => {
+            pool.query("DELETE FROM glavne_kategorije WHERE id_kategorije = $1", [id_kategorije], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve();
+            })
+        })
+    },
+
 
 
 };

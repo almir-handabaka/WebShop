@@ -6,7 +6,7 @@ var logger = require('morgan');
 var dotenv = require('dotenv');
 var jwt = require('jsonwebtoken');
 
-const { sendMail } = require('./mailer');
+//const { sendMail } = require('./mailer');
 
 
 
@@ -33,10 +33,58 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-const rute_dostupne_svima = ['/', '/login', '/login/logout', '/register/user', '/register/trgovina'];
-const kupac_rute = ['/pocetna', '/pocetna/interesi'];
-const trgovac_rute = ['/trgovina', '/trgovina/delete', '/trgovina/narudzbe', '/trgovina/postavke', '/trgovina/profilna',];
-const admin_rute = [];
+/*
+app.use('/', indexRouter);
+app.use('/login', loginRouter);
+app.use('/register', registerRouter);
+//app.use('/naslovna', naslovnaRouter);
+app.use('/trgovina', trgovinaRouter);
+app.use('/pocetna', pocetna_stranica);
+app.use('/artikal', artikal);
+app.use('/admin', administrator);
+app.use('/chat', chat);
+
+*/
+
+
+const rute_dostupne_svima = ['/', '/login', '/login/logout', '/register/user', '/register/trgovina', '/chat', '/register/promjena_sifre'];
+const kupac_rute = ['/pocetna', '/pocetna/interesi', '/trgovina', '/artikal', '/artikal/korpa', '/pocetna/kategorije', '/pocetna/postavke', '/artikal/korpa/dodaj', '/pocetna/trgovine', '/pocetna/interesi', '/pocetna/postavke/detalji', '/pocetna/interesi/delete', '/chat'];
+
+const trgovac_rute = ['/trgovina', '/trgovina/delete', '/trgovina/narudzbe', '/trgovina/postavke', '/trgovina/profilna', '/trgovina/dodaj_artikal', '/trgovina/uredi_artikal', '/trgovina/delete', '/trgovina/narudzbe', '/trgovina/profilna', '/trgovina/kategorije', '/trgovina/poslovnice', '/trgovina/fotografije/delete', '/trgovina/narudzbe/aktivne', '/trgovina/narudzbe/evidencija', '/trgovina/narudzbe/prihvati', '/trgovina/narudzbe/odbij', '/trgovina/narudzbe/isporuceno', '/trgovina/postavke/detalji', '/trgovina/postavke/poslovnica', '/trgovina/postavke/poslovnica/delete', '/chat'];
+
+const admin_rute = ['/admin', '/admin/korisnici', '/admin/blokiraj', '/admin/poruka', '/admin/statistika', '/admin/statistika/1', '/chat', '/pocetna/postavke', '/admin/lookup', '/admin/lookup/nova_kategorija', '/admin/lookup/ukloni_kategoriju'];
+
+
+const dozvoljenaRuta = (ruta, tip_korisnika) => {
+  ruta = ruta.split('/')[0];
+  if (tip_korisnika === 1) {
+    for (let i = 0; i < admin_rute.length; i++) {
+
+      if (admin_rute[i].includes(ruta)) {
+        return true;
+      }
+    }
+  }
+  else if (tip_korisnika === 2) {
+    for (let i = 0; i < trgovac_rute.length; i++) {
+
+      if (trgovac_rute[i].includes(ruta)) {
+        return true;
+      }
+    }
+  }
+  else if (tip_korisnika === 3) {
+    for (let i = 0; i < kupac_rute.length; i++) {
+
+      if (kupac_rute[i].includes(ruta)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 
 app.use(function (req, res, next) {
 
@@ -88,6 +136,7 @@ app.use(function (req, res, next) {
   }
 
 
+
   //---------------------
 
   /*
@@ -111,21 +160,21 @@ app.use(function (req, res, next) {
     return res.redirect('/');
   }
 
-  return next();
 
+  console.log("REDIREKT 2");
   if (req.rola === 1 && admin_rute.includes(url)) {
     return next();
   }
-  else if (req.rola === 2 && trgovac_rute.includes(url)) {
+  else if (req.rola === 2 && (trgovac_rute.includes(url) || dozvoljenaRuta(url, req.rola))) {
     console.log("TRGOVAC");
     return next();
   }
-  else if (req.rola === 3 && kupac_rute.includes(url)) {
+  else if (req.rola === 3 && (kupac_rute.includes(url) || dozvoljenaRuta(url, req.rola))) {
     return next();
   }
   console.log("REDIREKT");
   if (req.rola === 1) {
-    return res.redirect('/trgovina');
+    return res.redirect('/admin');
   }
   else if (req.rola === 2) {
     return res.redirect('/trgovina');

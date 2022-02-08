@@ -124,95 +124,105 @@
 </head>
 
 <body>
-
-  <%- include('../partials/kupac_hm.ejs') %>
-    <br>
-
-
-    <div class="px-1 py-1 my-2 ">
-      <div class="col-lg-12 mx-auto">
-        <div class="album py-1">
-          <div class="container" style="height: 35em;">
-
-            <div class="tab overflow-auto" style="height: 100%; border: 3px solid #746dc5;">
-
-              <% for(let i=0;i<profili.length;i++) {%>
-                <button class="tablinks border" onclick="otvoriChatSa('<%=profili[i].id%>')" id="defaultOpen"
-                  type="button">
-                  <%= profili[i].ime + " " + profili[i].prezime %>
-                </button>
-                <% } %>
-
-            </div>
-
-            <div id="London" class="tabcontent bg-white overflow-auto" style="height: 100%; border: 3px solid #746dc5;">
-              <div class="jumbotron jumbotron-fluid">
-
-                <div class="container" style="position: relative;">
-                  <div class="py-2">
-                  </div>
-                  <div id="poruke">
+  <% if (tip_korisnika===1) { %>
+    <%- include('../partials/admin_hm.ejs') %>
+      <% } %>
+        <% if (tip_korisnika===2) { %>
+          <%- include('../partials/trgovac_hm.ejs') %>
+            <% } %>
+              <% if (tip_korisnika===3) { %>
+                <%- include('../partials/kupac_hm.ejs') %>
+                  <% } %>
 
 
 
 
-                  </div>
-                  <div class="input-group mb-3" style=" bottom:0">
-                    <input type="text" class="form-control" placeholder="" aria-label="Example text with button addon"
-                      aria-describedby="button-addon1" id="sadrzajPoruke">
-                    <button class="btn btn-primary" type="button" id="button-addon1"
-                      onclick="posaljiPoruku()">Send</button>
-                  </div>
-                </div>
-              </div>
+                    <div class="px-1 py-1 my-2 ">
+                      <div class="col-lg-12 mx-auto">
+                        <div class="album py-1">
+                          <div class="container" style="height: 35em;">
+
+                            <div class="tab overflow-auto" style="height: 100%; border: 3px solid #746dc5;">
+
+                              <% for(let i=0;i<profili.length;i++) {%>
+                                <button class="tablinks border" onclick="otvoriChatSa('<%=profili[i].id%>')"
+                                  id="defaultOpen" type="button">
+                                  <%= profili[i].ime + " " + profili[i].prezime %>
+                                </button>
+                                <% } %>
+
+                            </div>
+
+                            <div id="London" class="tabcontent bg-white overflow-auto"
+                              style="height: 100%; border: 3px solid #746dc5;">
+                              <div class="jumbotron jumbotron-fluid">
+
+                                <div class="container" style="position: relative;">
+                                  <div class="py-2">
+                                  </div>
+                                  <div id="poruke">
 
 
-            </div>
+
+
+                                  </div>
+                                  <div class="input-group mb-3" style=" bottom:0">
+                                    <input type="text" class="form-control" placeholder=""
+                                      aria-label="Example text with button addon" aria-describedby="button-addon1"
+                                      id="sadrzajPoruke">
+                                    <button class="btn btn-primary" type="button" id="button-addon1"
+                                      onclick="posaljiPoruku()">Send</button>
+                                  </div>
+                                </div>
+                              </div>
+
+
+                            </div>
 
 
 
-          </div>
-        </div>
+                          </div>
+                        </div>
 
-      </div>
+                      </div>
 
-    </div>
-
-
+                    </div>
 
 
-    <script src="/javascripts/chat.js"></script>
-    <script>
-      function openCity(evt, cityName) {
-        var i, tabcontent, tablinks;
-        tabcontent = document.getElementsByClassName("tabcontent");
-        for (i = 0; i < tabcontent.length; i++) {
-          tabcontent[i].style.display = "none";
-        }
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
-          tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-        document.getElementById(cityName).style.display = "block";
-        evt.currentTarget.className += " active";
-      }
-
-      // Get the element with id="defaultOpen" and click on it
-      document.getElementById("defaultOpen").click();
-    </script>
-
-    <script>
-      (function () {
-        'use strict'
-
-        document.querySelector('#navbarSideCollapse').addEventListener('click', function () {
-          console.log("Open");
-          document.querySelector('.offcanvas-collapse').classList.toggle('open')
-        })
-      })()
 
 
-    </script>
+                    <script src="/javascripts/chat.js"></script>
+                    <script>
+                      function openCity(evt, cityName) {
+                        var i, tabcontent, tablinks;
+                        tabcontent = document.getElementsByClassName("tabcontent");
+                        for (i = 0; i < tabcontent.length; i++) {
+                          tabcontent[i].style.display = "none";
+                        }
+                        tablinks = document.getElementsByClassName("tablinks");
+                        for (i = 0; i < tablinks.length; i++) {
+                          tablinks[i].className = tablinks[i].className.replace(" active", "");
+                        }
+                        document.getElementById(cityName).style.display = "block";
+                        evt.currentTarget.className += " active";
+                      }
+
+                      // Get the element with id="defaultOpen" and click on it
+                      document.getElementById("defaultOpen").click();
+                    </script>
+
+                    <script>
+                      (function () {
+                        'use strict'
+
+                        document.querySelector('#navbarSideCollapse').addEventListener('click', function () {
+                          console.log("Open");
+                          document.querySelector('.offcanvas-collapse').classList.toggle('open')
+                        })
+                      })()
+
+
+                    </script>
 </body>
 
 </html>

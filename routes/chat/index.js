@@ -30,8 +30,8 @@ router.get('/', async function (req, res, next) {
       }
     }
 
-    console.log(profili);
-    res.render('chat/chat', { title: 'Chat - Web Shop', profili: profili });
+
+    res.render('chat/chat', { title: 'Chat - Web Shop', profili: profili, tip_korisnika: req.korisnik.tip });
   }).catch((error) => {
     next(error);
   });
