@@ -97,78 +97,69 @@
                     </h2>
                     <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
                       data-bs-parent="#accordionExample">
-                      <div class="accordion-body">
-                        <div class="input-group mb-3 mb-4">
-                          <input type="text" id="novaKategorija" class="form-control"
-                            aria-label="Text input with dropdown button">
-                          <button onclick="dodajKategoriju()" type="button" class="btn btn-primary">Dodaj
-                            grad</button>
 
-                        </div>
-                        <table class="table">
-                          <thead>
-                            <tr>
-                              <th scope="col">Kanton</th>
-                              <th scope="col">Grad</th>
-                              <th scope="col">Ukloni</th>
-                            </tr>
-                          </thead>
-                          <tbody id="gradovi">
-                            <% for( let i=0; i < grad.length; i++ ) { %>
-                              <tr id="grad<%= grad[i].id_grada %>">
-                                <td>
-                                  <%= kanton[grad[i].kanton] %>
-                                </td>
-                                <td>
-                                  <%= grad[i].naziv_grada %>
-                                </td>
-                                <td><button type="button"
-                                    class="btn-close  translate-middl p-2  border border-light rounded-circle"
-                                    aria-label="Close" style="left:80%"
-                                    onclick="izbrisiGrad('<%= grad[i].id_grada %>')"></button>
-                                </td>
-                              </tr>
+                      <div class="row g-3 mx-auto m-3">
+                        <div class="col-auto">
+                          <label for="staticEmail2" class="visually-hidden">Kanton</label>
+                          <select id="kanton" class="form-select" aria-label="Default select example">
+                            <% for (const k in kanton) {%>
+                              <option value="<%= k %>">
+                                <%= kanton[k] %>
+                              </option>
                               <% } %>
-                          </tbody>
-                        </table>
+                          </select>
+                        </div>
+                        <div class="col-auto">
+                          <label for="nazivGrada" class="visually-hidden">Grad</label>
+                          <input type="text" class="form-control" id="nazivGrada" placeholder="Grad">
+                        </div>
+                        <div class="col-auto">
+                          <button type="button" class="btn btn-primary mb-3" onclick="dodajGrad()">Dodaj grad</button>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingThree">
-                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                        data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                        Accordion Item #3
-                      </button>
-                    </h2>
-                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
-                      data-bs-parent="#accordionExample">
-                      <div class="accordion-body">
-                        <strong>This is the third item's accordion body.</strong> It is hidden by default, until the
-                        collapse plugin
-                        adds the appropriate classes that we use to style each element. These classes control the
-                        overall
-                        appearance, as
-                        well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS
-                        or
-                        overriding our
-                        default variables. It's also worth noting that just about any HTML can go within the
-                        <code>.accordion-body</code>, though the transition does limit overflow.
-                      </div>
+
+                      <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Kanton</th>
+                            <th scope="col">Grad</th>
+                            <th scope="col">Ukloni</th>
+                          </tr>
+                        </thead>
+                        <tbody id="gradovi">
+                          <% for( let i=0; i < grad.length; i++ ) { %>
+                            <tr id="grad<%= grad[i].id_grada %>">
+                              <td>
+                                <%= kanton[grad[i].kanton] %>
+                              </td>
+                              <td>
+                                <%= grad[i].naziv_grada %>
+                              </td>
+                              <td><button type="button"
+                                  class="btn-close  translate-middl p-2  border border-light rounded-circle"
+                                  aria-label="Close" style="left:80%"
+                                  onclick="izbrisiGrad('<%= grad[i].id_grada %>')"></button>
+                              </td>
+                            </tr>
+                            <% } %>
+                        </tbody>
+                      </table>
                     </div>
                   </div>
                 </div>
 
               </div>
+
             </div>
           </div>
-
         </div>
 
       </div>
 
+    </div>
 
-      <script src="/javascripts/administrator.js"></script>
+
+    <script src="/javascripts/administrator.js"></script>
 </body>
 
 </html>

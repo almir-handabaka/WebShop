@@ -130,11 +130,48 @@ const izbrisiGrad = (id_grada) => {
     function (data, status) {
       if (status) {
         toastr["success"]("Grad izbrisan!", "Grad");
-        $('#grad' + id_kategorije).remove();
+        $('#grad' + id_grada).remove();
       }
       else {
         toastr["error"]("Grad nije izbrisan!", "Grad");
       }
 
     });
+}
+
+const dodajGrad = () => {
+  let naziv_grada = $('#nazivGrada').val();
+  let kanton = $('#kanton').val();
+
+
+  $.post("/admin/lookup/dodaj_grad",
+    {
+      naziv_grada: naziv_grada,
+      kanton: kanton
+    },
+    function (data, status) {
+      if (status) {
+        toastr["success"]("Grad sačuvan!", "Grad");
+        $('#nazivGrada').val("");
+        $('#gradovi').append(`<tr id="grad${data.id_grada}">
+                              <td>
+                                ${$('#kanton option:selected').text()}
+                              </td>
+                              <td>
+                                ${naziv_grada}
+                              </td>
+                              <td><button type="button"
+                                  class="btn-close  translate-middl p-2  border border-light rounded-circle"
+                                  aria-label="Close" style="left:80%"
+                                  onclick="izbrisiGrad('${data.id_grada}')"></button>
+                              </td>
+                            </tr>`);
+
+      }
+      else {
+        toastr["error"]("Grad nije sačuvan!", "Grad");
+      }
+
+    });
+
 }

@@ -27,6 +27,17 @@
   <link href="/stylesheets/pocetna_kupac.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
+    #chartKanvas {
+      width: 40% !important;
+      height: auto !important;
+    }
+
+    @media only screen and (max-width: 600px) {
+      #chartKanvas {
+        width: 90% !important;
+        height: auto !important;
+      }
+    }
   </style>
 
 </head>
@@ -40,32 +51,103 @@
     <br><br>
 
 
-    <div class="px-4 py-1 my-5 ">
-      <div class="col-lg-10 mx-auto">
-        <div class="album py-2">
+    <div class="px-2 py-1 my-1">
+      <div class="col-lg-11 mx-auto">
+        <div class="album py-1">
           <div class="container">
             <div class=" bg-white">
 
-              <div>
-                <canvas id="korisnici"></canvas>
+              <div class="container my-1">
+                <div class="row p-1 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
+                  <div class="col-lg-5 p-3 p-lg-5 pt-lg-3">
+                    <canvas id="korisnici"></canvas>
+                  </div>
+                  <div class="col-lg-5 offset-lg-1 p-0 overflow-hidden shadow-lg">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Tip korisnika</th>
+                          <th>Broj profila</th>
+                        </tr>
+                      </thead>
+                      <tbody id="korisniciTabela">
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
+
               <br>
-              <div>
-                <canvas id="aktivnost"></canvas>
+              -----------------
+              <br>
+              <div class="container my-1">
+                <div class="row p-1 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
+                  <div class="col-lg-5 p-3 p-lg-5 pt-lg-3">
+                    <canvas id="aktivnost"></canvas>
+                  </div>
+                  <div class="col-lg-5 offset-lg-1 p-0 overflow-hidden shadow-lg">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Status</th>
+                          <th>Broj profila</th>
+                        </tr>
+                      </thead>
+                      <tbody id="aktinostiTabela">
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
+
+              <br> --------
+
+
               <br>
-              <div>
-                <canvas id="artikli"></canvas>
+              <div class="container my-1">
+                <div class="row p-1 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
+                  <div class="col-lg-5 p-3 p-lg-5 pt-lg-3">
+                    <canvas id="narudzbe"></canvas>
+                  </div>
+                  <div class="col-lg-5 offset-lg-1 p-0 overflow-hidden shadow-lg">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Status narudžbe</th>
+                          <th>Broj narudžbi</th>
+                        </tr>
+                      </thead>
+                      <tbody id="narudzbeTabela">
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
+
               <br>
-              <div>
-                <canvas id="poruke"></canvas>
+              <div class="container my-1">
+                <div class="row p-1 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
+                  <div class="col-lg-5 p-3 p-lg-5 pt-lg-3">
+                    <canvas id="chat"></canvas>
+                  </div>
+                  <div class="col-lg-5 offset-lg-1 p-0 overflow-hidden shadow-lg">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>Tip korisnika</th>
+                          <th>Broj poruka</th>
+                        </tr>
+                      </thead>
+                      <tbody id="chatTabela">
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
-              <br>
-              <div>
-                <canvas id="narudzbe"></canvas>
-              </div>
-              <br>
 
 
 
@@ -83,20 +165,80 @@
       $(document).ready(function () {
         $.get("/admin/statistika/1",
           function (data, status) {
+            //---------------------------------------------
             const myChart1 = new Chart(
               document.getElementById('korisnici'),
               data.config_korisnik
             );
 
+            $('#korisniciTabela').append(`<tr>
+              <td>Admin</td>
+              <td>${data.admini}</td>
+            </tr>
+            <tr>
+              <td>Kupac</td>
+              <td>${data.kupci}</td>
+            </tr>
+            <td>Trgovci</td>
+              <td>${data.trgovci}</td>
+            </tr>`);
+
+
+            //---------------------------------------------
             const myChart2 = new Chart(
               document.getElementById('aktivnost'),
               data.config_aktivnost
             );
 
+            $('#aktinostiTabela').append(`<tr>
+              <td>Aktivni</td>
+              <td>${data.aktivni}</td>
+            </tr>
+            <tr>
+              <td>Blokirani</td>
+              <td>${data.banovani}</td>
+            </tr>
+            `);
+            //---------------------------------------------
             const myChart3 = new Chart(
               document.getElementById('narudzbe'),
               data.config_narudzbe
             );
+
+            $('#narudzbeTabela').append(`<tr>
+              <td>Završeno</td>
+              <td>${data.zavrsene_narudzbe}</td>
+            </tr>
+            <tr>
+              <td>U toku</td>
+              <td>${data.aktivne_narudzbe}</td>
+            </tr>
+            <tr>
+              <td>Otkazane/odbijene</td>
+              <td>${data.odbijena_narudzbe}</td>
+            </tr>
+            `);
+            //---------------------------------------------
+            const myChart4 = new Chart(
+              document.getElementById('chat'),
+              data.config_chat
+            );
+
+            $('#chatTabela').append(`<tr>
+              <td>Admin</td>
+              <td>${data.poslao_admin}</td>
+            </tr>
+            <tr>
+              <td>Trgovac</td>
+              <td>${data.poslao_trgovac}</td>
+            </tr>
+            <tr>
+              <td>Kupac</td>
+              <td>${data.poslao_kupac}</td>
+            </tr>
+            `);
+            //---------------------------------------------
+
 
           });
       });

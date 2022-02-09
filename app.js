@@ -52,7 +52,7 @@ const kupac_rute = ['/pocetna', '/pocetna/interesi', '/trgovina', '/artikal', '/
 
 const trgovac_rute = ['/trgovina', '/trgovina/delete', '/trgovina/narudzbe', '/trgovina/postavke', '/trgovina/profilna', '/trgovina/dodaj_artikal', '/trgovina/uredi_artikal', '/trgovina/delete', '/trgovina/narudzbe', '/trgovina/profilna', '/trgovina/kategorije', '/trgovina/poslovnice', '/trgovina/fotografije/delete', '/trgovina/narudzbe/aktivne', '/trgovina/narudzbe/evidencija', '/trgovina/narudzbe/prihvati', '/trgovina/narudzbe/odbij', '/trgovina/narudzbe/isporuceno', '/trgovina/postavke/detalji', '/trgovina/postavke/poslovnica', '/trgovina/postavke/poslovnica/delete', '/chat'];
 
-const admin_rute = ['/admin', '/admin/korisnici', '/admin/blokiraj', '/admin/poruka', '/admin/statistika', '/admin/statistika/1', '/chat', '/pocetna/postavke', '/admin/lookup', '/admin/lookup/nova_kategorija', '/admin/lookup/ukloni_kategoriju'];
+const admin_rute = ['/admin', '/admin/korisnici', '/admin/blokiraj', '/admin/poruka', '/admin/statistika', '/admin/statistika/1', '/chat', '/pocetna/postavke', '/admin/lookup', '/admin/lookup/nova_kategorija', '/admin/lookup/ukloni_kategoriju', '/admin/lookup/dodaj_grad', '/admin/lookup/ukloni_grad'];
 
 
 const dozvoljenaRuta = (ruta, tip_korisnika) => {

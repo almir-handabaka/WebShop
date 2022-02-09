@@ -616,6 +616,27 @@ exports.db_funkcije = {
         })
     },
 
+    dodajGrad: (naziv_grada, kanton_id) => {
+        return new Promise((resolve, reject) => {
+            pool.query("INSERT INTO gradovi_lk (naziv_grada, kanton) VALUES ($1, $2) RETURNING *", [naziv_grada, kanton_id], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    },
+
+    izbrisiGrad: (id_grada) => {
+        return new Promise((resolve, reject) => {
+            pool.query("DELETE FROM gradovi_lk WHERE id_grada = $1", [id_grada], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve();
+            })
+        })
+    },
 
 
 };
