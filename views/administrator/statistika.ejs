@@ -48,8 +48,7 @@
 
 
   <%- include('../partials/admin_hm.ejs') %>
-    <br><br>
-
+    <br>
 
     <div class="px-2 py-1 my-1">
       <div class="col-lg-11 mx-auto">
@@ -63,7 +62,7 @@
                     <canvas id="korisnici"></canvas>
                   </div>
                   <div class="col-lg-5 offset-lg-1 p-0 overflow-hidden shadow-lg">
-                    <table class="table">
+                    <table class="table table-bordered">
                       <thead>
                         <tr>
                           <th>Tip korisnika</th>
@@ -79,15 +78,13 @@
               </div>
 
               <br>
-              -----------------
-              <br>
               <div class="container my-1">
                 <div class="row p-1 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
                   <div class="col-lg-5 p-3 p-lg-5 pt-lg-3">
                     <canvas id="aktivnost"></canvas>
                   </div>
                   <div class="col-lg-5 offset-lg-1 p-0 overflow-hidden shadow-lg">
-                    <table class="table">
+                    <table class="table table-bordered">
                       <thead>
                         <tr>
                           <th>Status</th>
@@ -102,9 +99,6 @@
                 </div>
               </div>
 
-              <br> --------
-
-
               <br>
               <div class="container my-1">
                 <div class="row p-1 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
@@ -112,7 +106,7 @@
                     <canvas id="narudzbe"></canvas>
                   </div>
                   <div class="col-lg-5 offset-lg-1 p-0 overflow-hidden shadow-lg">
-                    <table class="table">
+                    <table class="table table-bordered">
                       <thead>
                         <tr>
                           <th>Status narudžbe</th>
@@ -134,7 +128,7 @@
                     <canvas id="chat"></canvas>
                   </div>
                   <div class="col-lg-5 offset-lg-1 p-0 overflow-hidden shadow-lg">
-                    <table class="table">
+                    <table class="table table-bordered">
                       <thead>
                         <tr>
                           <th>Tip korisnika</th>
@@ -142,6 +136,52 @@
                         </tr>
                       </thead>
                       <tbody id="chatTabela">
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <br>
+
+              <div class="container my-1">
+                <div class="row p-1 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
+                  <div class="col-lg-12 p-3 p-lg-5 pt-lg-3">
+                    <canvas id="registracije"></canvas>
+                  </div>
+
+                  <div class="col-lg-8 offset-lg-1 p-0 overflow-hidden shadow-lg mx-auto">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Datum</th>
+                          <th>Registracije</th>
+                        </tr>
+                      </thead>
+                      <tbody id="registracijeTabela">
+
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+
+              <br>
+              <div class="container my-1">
+                <div class="row p-1 pb-0 pe-lg-0 pt-lg-5 align-items-center rounded-3 border shadow-lg">
+                  <div class="col-lg-5 p-3 p-lg-5 pt-lg-3">
+                    <canvas id="artikliKategorije"></canvas>
+                  </div>
+                  <div class="col-lg-5 offset-lg-1 p-0 overflow-hidden shadow-lg">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Kategorija</th>
+                          <th>Broj artikala</th>
+                        </tr>
+                      </thead>
+                      <tbody id="artikliKategorijeTabela">
 
                       </tbody>
                     </table>
@@ -238,6 +278,33 @@
             </tr>
             `);
             //---------------------------------------------
+            const myChart5 = new Chart(
+              document.getElementById('registracije'),
+              data.config_registracije
+            );
+
+            for (let i = 0; i < data.registracije_labels.length; i++) {
+              $('#registracijeTabela').append(`<tr>
+                <td>${data.registracije_labels[i]}</td>
+                <td>${data.registracije_data[i]}</td>
+                </tr>`
+              );
+            }
+
+            //----------------------
+            artikliKategorije
+            const myChart6 = new Chart(
+              document.getElementById('artikliKategorije'),
+              data.config_kategorije
+            );
+
+            for (let i = 0; i < data.kat_data.length; i++) {
+              $('#artikliKategorijeTabela').append(`<tr>
+                <td>${data.kat_labels[i]}</td>
+                <td>${data.kat_data[i]}</td>
+                </tr>`
+              );
+            }
 
 
           });

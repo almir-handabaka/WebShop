@@ -73,6 +73,15 @@ var numDaysBetween = function (d1, d2) {
   return diff / (1000 * 60 * 60 * 24);
 };
 
+function getRandomColor() {
+  var letters = '0123456789ABCDEF'.split('');
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+    color += letters[Math.floor(Math.random() * 16)];
+  }
+  return color;
+}
+
 
 router.get('/statistika/1', async function (req, res, next) {
   try {
@@ -89,9 +98,8 @@ router.get('/statistika/1', async function (req, res, next) {
     //console.log(now);
     for (let i = 0; i < 30; i++) {
       let tmp_date = date.addDays(now, -i);
-      reg_zadnjih_30_dana[date.format(tmp_date, 'YYYY/MM/DD')];
+      reg_zadnjih_30_dana[date.format(tmp_date, 'YYYY/MM/DD')] = Math.round(Math.random() * 50);
     }
-
 
 
     for (let i = 0; i < korisnici.length; i++) {
@@ -99,7 +107,7 @@ router.get('/statistika/1', async function (req, res, next) {
       if (registracija <= 30) {
 
 
-        registracija = Math.round(registracija);
+        //registracija = Math.round(registracija);
         //reg_zadnjih_30_dana[date.addDays(now, -registracija)] += 1;
         reg_zadnjih_30_dana[date.format(date.addDays(now, -registracija), 'YYYY/MM/DD')] += 1;;
 
@@ -123,32 +131,43 @@ router.get('/statistika/1', async function (req, res, next) {
       }
     }
 
-    console.log("Zadnjih 30 dana", reg_zadnjih_30_dana)
+    //console.log("Zadnjih 30 dana", reg_zadnjih_30_dana)
     let registracije_labels = [];
     let registracije_data = [];
 
     for (const i in reg_zadnjih_30_dana) {
-      console.log(i);
-      tmp_datum = date.format(date.parse(i), 'DD-MM-YYYY');
-      registracije_labels.push(tmp_datum);
-      //registracije_data.push(reg_zadnjih_30_dana[i]);
+      //console.log(i);
+      registracije_labels.push(i);
+      registracije_data.push(reg_zadnjih_30_dana[i]);
     }
 
-    console.log(registracije_labels);
-    console.log(registracije_data);
+    //console.log(registracije_labels);
+    //console.log(registracije_data);
 
     const artikli = await db_funkcije.dohvatiArtikle();
-    let broj_artikala = artikli.length;
+    const kategorije = await db_funkcije.dohvatiKategorije();
+
     let artikli_po_kategorijama = {};
+    for (let i = 0; i < kategorije.length; i++) {
+      artikli_po_kategorijama[kategorije[i].id_kategorije] = {
+        naziv_kategorije: kategorije[i].naziv_kategorije,
+        kolicina: Math.round(Math.random() * 150),
+      };
+    }
 
     for (let i = 0; i < artikli.length; i++) {
       if (artikli[i].kategorija_id in artikli_po_kategorijama) {
-        artikli_po_kategorijama[artikli[i].kategorija_id]++;
-      }
-      else {
-        artikli_po_kategorijama[artikli[i].kategorija_id] = 1;
+        artikli_po_kategorijama[artikli[i].kategorija_id].kolicina++;
       }
     }
+
+    let kat_data = [];
+    let kat_labels = [];
+    for (const i in artikli_po_kategorijama) {
+      kat_data.push(artikli_po_kategorijama[i].kolicina);
+      kat_labels.push(artikli_po_kategorijama[i].naziv_kategorije);
+    }
+
 
     const chat_poruke = await db_funkcije.getSvePoruke();
     let broj_poruka = chat_poruke.length;
@@ -168,7 +187,6 @@ router.get('/statistika/1', async function (req, res, next) {
     }
 
     const narudzbe = await db_funkcije.dohvatiSveNarudzbe();
-    const broj_narudzbi = narudzbe.length;
     let totalni_profit = 0;
     let zavrsene_narudzbe = 0;
     let aktivne_narudzbe = 0;
@@ -437,15 +455,137 @@ router.get('/statistika/1', async function (req, res, next) {
       }
     };
 
-    res.status(200).json({ config_korisnik, config_aktivnost, config_narudzbe, admini, trgovci, kupci, aktivni, banovani, zavrsene_narudzbe, aktivne_narudzbe, odbijena_narudzbe, config_chat, poslao_admin, poslao_trgovac, poslao_kupac });
+    //-------------------------------
+
+    /*
+        let registracije_labels = [];
+        let registracije_data = [];
+    */
+
+
+    const data_registracije = {
+      labels: registracije_labels,
+      datasets: [{
+        label: 'Registracije',
+        data: registracije_data,
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1,
+      }]
+    };
+
+    const config_registracije = {
+      type: 'line',
+      data: data_registracije,
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: {
+              // This more specific font property overrides the global property
+              font: {
+                size: 25
+              }
+            }
+          },
+          title: {
+            display: true,
+            text: 'Registracije u zadnjih 30 dana',
+            fullSize: true,
+            font: {
+              size: 30
+            }
+          },
+          tooltip: {
+            titleFont: {
+              size: 20
+            },
+            bodyFont: {
+              size: 20
+            },
+            footerFont: {
+              size: 20 // there is no footer by default
+            }
+          }
+        }
+      }
+    };
+
+    //--------------------
+
+    /*
+      let kat_data = [];
+      let kat_labels = [];
+      
+    */
+
+    let backColors = [];
+    for (let i = 0; i < kat_labels.length; i++) {
+      backColors.push(getRandomColor());
+    }
+
+    const data_kategorije = {
+      labels: kat_labels,
+      datasets: [{
+        label: 'Kategorije',
+        data: kat_data,
+        backgroundColor: backColors,
+        hoverOffset: 4
+      }]
+    };
+
+    const config_kategorije = {
+      type: 'pie',
+      data: data_kategorije,
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: {
+            position: 'top',
+            labels: {
+              // This more specific font property overrides the global property
+              font: {
+                size: 25
+              }
+            }
+          },
+          title: {
+            display: true,
+            text: 'Artikli po kategorijama',
+            fullSize: true,
+            font: {
+              size: 30
+            }
+          },
+          tooltip: {
+            titleFont: {
+              size: 20
+            },
+            bodyFont: {
+              size: 20
+            },
+            footerFont: {
+              size: 20 // there is no footer by default
+            }
+          }
+        }
+      }
+    };
+
+
+
+    res.status(200).json({ config_korisnik, config_aktivnost, config_narudzbe, admini, trgovci, kupci, aktivni, banovani, zavrsene_narudzbe, aktivne_narudzbe, odbijena_narudzbe, config_chat, poslao_admin, poslao_trgovac, poslao_kupac, config_registracije, registracije_labels, registracije_data, config_kategorije, kat_data, kat_labels });
 
   } catch (error) {
     console.log(error);
     res.sendStatus(404);
   }
 
-
 });
+
 
 // CRUD lookup tabela (gradovi, glavne kategorije, )
 router.get('/lookup', function (req, res, next) {

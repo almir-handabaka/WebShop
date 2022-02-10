@@ -165,11 +165,11 @@ app.use(function (req, res, next) {
   if (req.rola === 1 && admin_rute.includes(url)) {
     return next();
   }
-  else if (req.rola === 2 && (trgovac_rute.includes(url) || dozvoljenaRuta(url, req.rola))) {
+  else if (req.rola === 2 && trgovac_rute.includes(url)) {
     console.log("TRGOVAC");
     return next();
   }
-  else if (req.rola === 3 && (kupac_rute.includes(url) || dozvoljenaRuta(url, req.rola))) {
+  else if (req.rola === 3 && kupac_rute.includes(url)) {
     return next();
   }
   console.log("REDIREKT");
