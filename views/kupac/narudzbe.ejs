@@ -33,7 +33,7 @@
 <body>
 
   <%- include('../partials/kupac_hm.ejs') %>
-    <br><br>
+    <br>
 
 
     <div class="px-4 py-1 my-5 ">
@@ -52,49 +52,43 @@
               <table class="table">
                 <thead>
                   <tr>
-                    <th scope="col">#</th>
                     <th scope="col">Proizvod</th>
                     <th scope="col">Količina</th>
                     <th scope="col">Cijena/1</th>
                     <th scope="col">Totalni iznos</th>
-                    <th scope="col">Ukloni</th>
-                    <th>Zaključi narudžbu</th>
+                    <th scope="col">Status</th>
+                    <th>Akcije</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <% for(let i=0;i<korpa.length;i++) {%>
-                    <tr id="korpa<%=korpa[i].ko_id_korpe%>">
-                      <th scope="row">
-                        <%= i+1 %>
-                      </th>
+                  <% for(let i=0;i<narudzbe.length;i++) {%>
+                    <tr>
                       <td>
-                        <img src="/data/uploads/<%= korpa[i].thumbnail %>" alt="..." class="img-thumbnail"
-                          style="max-height: 75px; max-width: 75px;">
-                        <%= korpa[i].naziv_artikla %>
+                        <%= narudzbe[i].naziv_artikla %>
                       </td>
                       <td>
-                        <%= korpa[i].ko_kolicina %>
+                        <%= narudzbe[i].kolicina %>
                       </td>
                       <td>
-                        <%= korpa[i].ko_cijena %>
+                        <%= narudzbe[i].cijena_po_kom %> KM
                       </td>
                       <td>
-                        <%= korpa[i].ko_kolicina * korpa[i].ko_cijena %>
+                        <%= narudzbe[i].cijena_po_kom * narudzbe[i].kolicina%> KM
+                      </td>
+                      <td id="narudzba<%= narudzbe[i].id_narudzbe%>">
+                        <%= narudzbe[i].naziv_statusa_isporuke%>
                       </td>
                       <td>
-                        <button type="button" class="btn-close" aria-label="Close"
-                          onclick="izbrisiIzKorpe('<%= korpa[i].ko_id_korpe%>')"></button>
-                      </td>
-                      <td>
-                        <button type="button" class="btn btn-md btn-success"
-                          onclick="zakljuciNarudzbu('<%= korpa[i].ko_id_korpe%>')">
-                          Zaključi narudžbu
-                        </button>
+                        <% if (narudzbe[i].status_isporuke===1 || narudzbe[i].status_isporuke===2) { %>
+                          <button type="button" class="btn btn-outline-danger"
+                            onclick="otkaziNarudzbu('<%=narudzbe[i].id_narudzbe%>')">Otkaži narudžbu</button>
+                          <% } %>
+
                       </td>
                     </tr>
                     <% } %>
-
                 </tbody>
+
               </table>
 
 

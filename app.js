@@ -48,7 +48,7 @@ app.use('/chat', chat);
 
 
 const rute_dostupne_svima = ['/', '/login', '/login/logout', '/register/user', '/register/trgovina', '/chat', '/register/promjena_sifre'];
-const kupac_rute = ['/pocetna', '/pocetna/interesi', '/trgovina', '/artikal', '/artikal/korpa', '/pocetna/kategorije', '/pocetna/postavke', '/artikal/korpa/dodaj', '/pocetna/trgovine', '/pocetna/interesi', '/pocetna/postavke/detalji', '/pocetna/interesi/delete', '/chat'];
+const kupac_rute = ['/pocetna', '/pocetna/interesi', '/trgovina', '/artikal', '/artikal/korpa', '/pocetna/kategorije', '/pocetna/postavke', '/artikal/korpa/dodaj', '/pocetna/trgovine', '/pocetna/interesi', '/pocetna/postavke/detalji', '/pocetna/interesi/delete', '/chat',];
 
 const trgovac_rute = ['/trgovina', '/trgovina/delete', '/trgovina/narudzbe', '/trgovina/postavke', '/trgovina/profilna', '/trgovina/dodaj_artikal', '/trgovina/uredi_artikal', '/trgovina/delete', '/trgovina/narudzbe', '/trgovina/profilna', '/trgovina/kategorije', '/trgovina/poslovnice', '/trgovina/fotografije/delete', '/trgovina/narudzbe/aktivne', '/trgovina/narudzbe/evidencija', '/trgovina/narudzbe/prihvati', '/trgovina/narudzbe/odbij', '/trgovina/narudzbe/isporuceno', '/trgovina/postavke/detalji', '/trgovina/postavke/poslovnica', '/trgovina/postavke/poslovnica/delete', '/chat'];
 
@@ -144,6 +144,8 @@ app.use(function (req, res, next) {
   */
 
 
+  
+
   if (url === '/login/logout') {
     return next();
   }
@@ -160,7 +162,8 @@ app.use(function (req, res, next) {
     return res.redirect('/');
   }
 
-
+  return next();
+  
   console.log("REDIREKT 2");
   if (req.rola === 1 && admin_rute.includes(url)) {
     return next();

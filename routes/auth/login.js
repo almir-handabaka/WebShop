@@ -31,7 +31,7 @@ const generisiTokenTrgovac = (trgovina, remember_me, JWT_TOKEN) => {
 
 
 // almir.handabaka@gmail.com    almir
-// almir.a@gmail.ba   almir321
+// almir.a@gmail.ba   almir321  trgovina
 /* Auth logina i dodjela JWT tokena */
 router.post('/', function (req, res, next) {
     const email = req.body.email;

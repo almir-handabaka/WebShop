@@ -5,6 +5,32 @@ const { db_funkcije } = require('.././database/index.js');
 
 
 
+router.get('/narudzbe', async function (req, res, next) {
+    try {
+        const narudzbe = await db_funkcije.dohvatiSveNarudzbe2(req.korisnik);
+        //console.log(narudzbe);
+        res.render('kupac/narudzbe', { title: 'Web Shop - Narudzbe', narudzbe: narudzbe });
+    } catch (error) {
+        console.log("3")
+        console.log(error);
+        next(error);
+    }
+
+});
+
+router.post('/narudzbe/otkazi', function (req, res, next) {
+    console.log("poziv");
+    const id_narudzbe = req.body.id_narudzbe;
+    db_funkcije.otkaziNarudzbu(req.korisnik, id_narudzbe).then((result) => {
+        res.sendStatus(200);
+    }).catch((error) => {
+        console.log("error");
+        console.log(error);
+        res.sendStatus(404);
+    });
+
+});
+
 // ispis sadrzaja korpe
 router.get('/korpa', async function (req, res, next) {
     try {
@@ -24,6 +50,32 @@ router.get('/korpa', async function (req, res, next) {
 /* pronadjemo sve podatke o artiku, provjerimo da li je moguce naruciti, ako jeste dodajemo artikal u korpu, posle napisati novu funkciju za dohvacanje artikla
 koja nece imati joinove
 */
+
+
+/*
+CREATE OR REPLACE PROCEDURE dodajUKorpu (INT, INT, INT, INT)
+LANGUAGE 'plpgsql'
+
+AS $$
+    DECLARE
+        dostupna_kolicina_artikla int;
+    BEGIN
+        IF EXISTS (SELECT kolicina FROM artikli WHERE id_artikla =  $1)
+        THEN SELECT kolicina FROM artikli WHERE id_artikla =  $1 INTO dostupna_kolicina_artikla;
+        ELSE
+            RETURN;
+        END IF;
+        IF NOT EXISTS (SELECT * FROM korpa WHERE ko_artikal_id = $1) AND dostupna_kolicina_artikla >= $3 THEN
+            INSERT INTO korpa(ko_artikal_id, ko_id_korisnik, ko_kolicina, ko_cijena)
+            VALUES($1,$2,$3,$4);
+        ELSIF  dostupna_kolicina_artikla >= $3 THEN
+            UPDATE korpa
+            SET ko_kolicina = ko_kolicina + $3
+            WHERE ko_artikal_id = $1 AND ko_kolicina + $3 <= dostupna_kolicina_artikla;
+        end if;
+   end $$;
+
+*/
 router.post('/korpa/dodaj', async function (req, res, next) {
     try {
         let artikal_id = req.body.id_artikla;
@@ -32,16 +84,18 @@ router.post('/korpa/dodaj', async function (req, res, next) {
             return res.sendStatus(404);
         }
 
-        let artikal = await db_funkcije.dohvatiArtikal(artikal_id);
-        artikal = artikal[0];
-        if (artikal.kolicina < narucena_kolicina) {
-            return res.sendStatus(404);
+
+        const result = await db_funkcije.dodajUKorpu({ artikal_id: artikal_id, kolicina: narucena_kolicina }, req.korisnik);
+
+        if (result[0].dodajukorpu === true) {
+            console.log(`Kupac ${req.korisnik.email} je dodao artikal ${artikal_id} u korpu!`);
+            res.sendStatus(200);
+        }
+        else {
+            console.log("Dodavanje u korpu neuspjesno");
+            res.sendStatus(400);
         }
 
-        await db_funkcije.dodajUKorpu({ artikal_id: artikal.id_artikla, kolicina: narucena_kolicina, cijena: artikal.cijena }, req.korisnik);
-
-        console.log(`Kupac ${req.korisnik.email} je dodao artikal ${artikal_id} u korpu!`);
-        res.sendStatus(200);
     } catch (error) {
         console.log(error);
         res.sendStatus(404);
@@ -58,9 +112,13 @@ router.post('/korpa/izbrisi', function (req, res, next) {
     })
 
 });
-// sve sto je  trenutno u korpi prebacujemo u naruzbe
+
+
+// sve sto je  trenutno u korpi prebacujemo u naruzbe, radimo jednu po jednu narudzbu
+// TODO na FE ukloniti artikal, smanjiti broj artikala u korpi
 router.post('/korpa/naruci', function (req, res, next) {
-    db_funkcije.potvrdiNarudzbu(req.korisnik).then(() => {
+    const id_korpe = req.body.id_korpe;
+    db_funkcije.potvrdiNarudzbu(req.korisnik, id_korpe).then(() => {
         res.sendStatus(200);
     }).catch((error) => {
         console.log(error);
@@ -72,7 +130,6 @@ router.post('/korpa/naruci', function (req, res, next) {
 
 router.get('/:artikal_id', async function (req, res, next) {
     try {
-
         let artikal_id = req.params.artikal_id;
         let artikal = await db_funkcije.dohvatiArtikal(artikal_id);
         if (artikal[0] === undefined) {
@@ -117,5 +174,6 @@ router.get('/:artikal_id', async function (req, res, next) {
     // });
 
 });
+
 
 module.exports = router;

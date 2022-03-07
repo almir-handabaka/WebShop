@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var date = require('date-and-time');
+const url = require('url');
 const { db_funkcije } = require('.././database/index.js');
 
 
@@ -121,6 +122,21 @@ router.post('/interesi/delete', function (req, res, next) {
         console.log("Interes uspjesno izbrisan!");
         res.sendStatus(200);
     }).catch((error) => {
+        res.sendStatus(404);
+    });
+});
+
+
+router.get('/pretraga', function (req, res, next) {
+    const query_str = url.parse(req.url, true).query;
+    const search_input = query_str.search_input;
+    console.log(search_input);
+
+    db_funkcije.searchArtiklePoTekstu(search_input).then((result) => {
+        res.render('kupac/pocetna', { title: 'Web Shop', artikli: result, first_login: req.cookies.firstLogin });
+    }).catch((error) => {
+        console.log("Greska pri pretrazi!");
+        console.log(error);
         res.sendStatus(404);
     });
 });

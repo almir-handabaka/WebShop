@@ -474,7 +474,7 @@ exports.db_funkcije = {
 
     dodajUKorpu: (narudzba, korisnik) => {
         return new Promise((resolve, reject) => {
-            pool.query("INSERT INTO korpa (ko_artikal_id, ko_id_korisnik, ko_kolicina, ko_cijena) VALUES($1,$2,$3,$4)", [narudzba.artikal_id, korisnik.id, narudzba.kolicina, narudzba.cijena], (err, result) => {
+            pool.query("select dodajUKorpu($1,$2,$3)", [narudzba.artikal_id, korisnik.id, narudzba.kolicina], (err, result) => {
                 if (err) {
                     return reject(err);
                 }
@@ -505,13 +505,35 @@ exports.db_funkcije = {
         })
     },
 
-    potvrdiNarudzbu: (korisnik) => {
+    potvrdiNarudzbu: (korisnik, id_korpe) => {
         return new Promise((resolve, reject) => {
-            pool.query("DELETE FROM korpa where ko_id_korpe = $1 and ko_id_korisnik = $2", [id_korpe, korisnik.id], (err, result) => {
+            pool.query("SELECT potvrdiNarudzbu($1, $2)", [id_korpe, korisnik.id], (err, result) => {
                 if (err) {
                     return reject(err);
                 }
                 return resolve(result.rows);
+            })
+        })
+    },
+
+    dohvatiSveNarudzbe2: (korisnik) => {
+        return new Promise((resolve, reject) => {
+            pool.query("SELECT * FROM narudzbe nr LEFT JOIN artikli ar ON ar.id_artikla = nr.artikal_id INNER JOIN status_isporuke_lk slk on nr.status_isporuke = slk.id_statusa_isporuke WHERE nr.porucioc_id = $1", [korisnik.id], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    },
+
+    otkaziNarudzbu: (korisnik, id_narudzbe) => {
+        return new Promise((resolve, reject) => {
+            pool.query("UPDATE narudzbe SET status_isporuke = 5 WHERE id_narudzbe = $1 AND porucioc_id = $2 AND (status_isporuke = 1 OR status_isporuke = 2)", [id_narudzbe, korisnik.id], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve();
             })
         })
     },
@@ -634,6 +656,18 @@ exports.db_funkcije = {
                     return reject(err);
                 }
                 return resolve();
+            })
+        })
+    },
+
+    // nije sigurno, promjeniti u buducnosti
+    searchArtiklePoTekstu: (search_input) => {
+        return new Promise((resolve, reject) => {
+            pool.query("SELECT * FROM artikli_data WHERE lower(naziv_artikla) LIKE ('%' || $1 || '%')", [search_input], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result.rows);
             })
         })
     },
