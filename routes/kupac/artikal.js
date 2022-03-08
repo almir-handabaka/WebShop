@@ -128,6 +128,8 @@ router.post('/korpa/naruci', function (req, res, next) {
 });
 
 
+
+// koristit sql funkciju umjesto vise upita na bazu
 router.get('/:artikal_id', async function (req, res, next) {
     try {
         let artikal_id = req.params.artikal_id;

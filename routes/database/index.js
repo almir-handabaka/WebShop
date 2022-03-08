@@ -105,6 +105,19 @@ exports.db_funkcije = {
         })
     },
 
+    dohvatiArtikleZaPocetnu: (korisnik) => {
+        return new Promise((resolve, reject) => {
+            pool.query('select * FROM dohvatiArtiklePocetna($1)', [korisnik.id], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                //console.log(result.rows);
+
+                return resolve(result.rows);
+            })
+        })
+    },
+
     // update artikla
     updateArtikal: (artikal) => {
         console.log(artikal);
@@ -660,10 +673,10 @@ exports.db_funkcije = {
         })
     },
 
-    // nije sigurno, promjeniti u buducnosti
+    // 
     searchArtiklePoTekstu: (search_input) => {
         return new Promise((resolve, reject) => {
-            pool.query("SELECT * FROM artikli_data WHERE lower(naziv_artikla) LIKE ('%' || $1 || '%')", [search_input], (err, result) => {
+            pool.query("SELECT * FROM artikli_data WHERE lower(naziv_artikla) LIKE ('%' || $1 || '%')", [search_input.toLowerCase()], (err, result) => {
                 if (err) {
                     return reject(err);
                 }

@@ -12,7 +12,7 @@ router.get('/', function (req, res, next) {
     else {
         req.cookies.firstLogin = false;
     }
-    db_funkcije.dohvatiArtikle().then((result) => {
+    db_funkcije.dohvatiArtikleZaPocetnu(req.korisnik).then((result) => {
         //console.log(result);
         //console.log(result[0]);
         res.render('kupac/pocetna', { title: 'Web Shop', artikli: result, first_login: req.cookies.firstLogin });
