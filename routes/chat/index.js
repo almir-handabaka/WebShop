@@ -12,6 +12,11 @@ const { db_funkcije } = require('.././database/index.js');
 
 
 router.get('/', async function (req, res, next) {
+  res.render('chat/chat', { title: 'Chat - Web Shop', tip_korisnika: 2 });
+
+});
+
+router.get('/aktivnost', async function (req, res, next) {
   // samo s kim je korisnik komunicirao (postoji makar 1 poruka izmedju korisnika)
 
   db_funkcije.getAktivnostPoruka(req.korisnik).then((result) => {
@@ -30,24 +35,33 @@ router.get('/', async function (req, res, next) {
       }
     }
 
-
-    res.render('chat/chat', { title: 'Chat - Web Shop', profili: profili, tip_korisnika: req.korisnik.tip });
+    //console.log(profili);
+    res.status(200).json({ profili });
   }).catch((error) => {
-    next(error);
+    console.log(error);
+    res.sendStatus(404);
   });
 
 });
 
-/*
-  kada korisnik pritisne posalji poruku dodaje se prazna poruka u tabelu
-  pa onda ucitamo stranicu iznad koja proslijedi varijablu id chata kojem saljemo poruku
 
+
+/*
+  kad korisnik klikne dugme na profilu "Posalji poruku" u niz poruka se dodaje i id tog profila ukoliko se ne nalazi u njemu
+
+*/
+
+/*
+  Kada klikne nekog korisnika na chatu ucita poruke s njim
 */
 router.get('/:korisnik_id', async function (req, res, next) {
   let korisnik_id = req.params.korisnik_id;
 
   db_funkcije.getPorukeOd(req.korisnik, korisnik_id).then((result) => {
-    res.status(200).json({ result, korisnik_id });
+    //console.log(result);
+    const room_id = result[0].c_room_id;
+    const sagovornik = korisnik_id;
+    res.status(200).json({ result, korisnik_id, room_id });
   }).catch((error) => {
     console.log(error);
     res.sendStatus(404);

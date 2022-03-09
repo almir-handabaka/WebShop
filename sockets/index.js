@@ -1,6 +1,6 @@
 const sockets = {
   notifikacijeSocket: require('./notifikacije'),
-  //chatSocket: require('./chat'),
+  chatSocket: require('./chat'),
 };
 
 module.exports = sockets;

@@ -32,9 +32,9 @@ server.on('listening', onListening);
 
 
 // Socket IO chat i notifikacije
-const { notifikacijeSocket } = require('.././sockets');
+const { chatSocket, notifikacijeSocket } = require('.././sockets');
 notifikacijeSocket.io.attach(server);
-//chatSocket.io.attach(server);
+chatSocket.io.attach(server);
 
 
 

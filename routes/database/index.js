@@ -573,9 +573,9 @@ exports.db_funkcije = {
         })
     },
 
-    sacuvajPoruku: (poruka, korisnik) => {
+    sacuvajPoruku: (poruka, korisnik_id) => {
         return new Promise((resolve, reject) => {
-            pool.query("INSERT INTO chat (c_od, c_ka, tekst_poruke) values ($1, $2, $3) RETURNING *", [korisnik.id, poruka.chat_id, poruka.tekst_poruke], (err, result) => {
+            pool.query("INSERT INTO chat (c_od, c_ka, tekst_poruke) values ($1, $2, $3) RETURNING *", [korisnik_id, poruka.chat_id, poruka.tekst_poruke], (err, result) => {
                 if (err) {
                     return reject(err);
                 }

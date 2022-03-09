@@ -1,45 +1,59 @@
 const io = require("socket.io")();
+const { db_funkcije } = require('../routes/database/index.js');
+var dotenv = require('dotenv');
+var jwt = require('jsonwebtoken');
+
+dotenv.config();
+const JWT_TOKEN = process.env.JWT_TOKEN_SECRET;
 
 
 /*
-  NOTIFIKACIJE
-  Svaki korisnik dobije svoj custom auth string pri registrovanju profila kojeg cuvamo u db.
-  Taj auth string enkriptovan u token ce se stavljati u EJS, slati preko socketa na BE tokom komunikacije i tamo znamo s kim komuniciramo. Token je "soba" kojoj cemo kasnije slati notifikacije. Kada kupac potvrdi narudzbu iz baze izvucemo taj token i posaljemo mu notifikaciju. Token ce biti ekriptovan da spriječimo pokušaje zloupotrebe. Token sadrži id profila, auth string i neke druge informacije. Socket middleware će ga raspakovati svaki put.
+  Tabela se sastoji od c_id,	c_od,	c_ka,	tekst_poruke,	vrijeme_slanja	poruka_vidjena,	globalna_poruka, c_room_id
 
-  Za komunikaciju direktno sa jednim korisnikom (slanje notifikacije) koristiti samo taj auth token. Za chat izmedju korisnika sa FE se šalje token i id korisnika kome se poruka salje ili koristiti neki ID chata tj sobe za ta dva korisnika.
 
-  Kada se narudzba potvrdi poslati notifikaciju trgovcu ako je online, spasiti notif u bazu (id_notif, tekst notif, notifikacija poslata)
-  1. Notifikacije za svaku narudžbu u kojoj se nalazi artikal trgovca;
-  2. Notifikacija za nove poruke (broj poruka se samo mijenja)
+  Za chat izmedju svakog korisnika u bazi se cuva id sobe koja ce biti neki string.
+
+  Kada korisnik ucita cijeli chat ruta /chat, za svaki chat s nekom osobom bice dodan u svaki od tih soba. 
+
+  Kad ucita poruke s nekim korisnikom u JSU sacuvamo id sobe kako bi znali kome saljemo poruke.
+
 */
 
 // middleware za auth socket tokena
 io.use((socket, next) => {
-  console.log("Socket 1");
   console.log("User token 1: ", socket.handshake.query.authToken);
   socket.authToken = socket.handshake.query.authToken;
-  socket.join(socket.authToken);
+  try {
+    let decoded_token = jwt.verify(socket.authToken, JWT_TOKEN);
+
+    socket.korisnik_id = decoded_token.id;
+    console.log(decoded_token)
+  } catch (error) {
+    console.log("Greska");
+    console.log(error);
+  }
   next();
 });
 
 
 io.on('connection', (socket) => {
-  console.log("User connected 1", socket.id);
+  console.log("User connected on chat socket", socket.id);
 
-  socket.on('novi igrac', (msg) => {
-    console.log("Novi igrac: ", msg);
-    io.to(socket.id).emit('msg', `Dobrodošao ${msg}`);
-
-    let igrac = {
-      ime: msg,
-      socket_id: socket.id,
-    }
-    trenutni_igraci.push(igrac);
-
-
+  socket.on('dodajUSobu', (room_id) => {
+    console.log(`Korisnik ulazi u sobu ${room_id}`);
+    socket.join(room_id);
   });
 
+  // spasavamo poruku u db i proslijedimo je drugom korisniku u sobi
+  socket.on('nova_poruka', (poruka) => {
+    console.log(poruka);
+    console.log(socket.korisnik_id);
+    poruka.chat_id = poruka.sagovornik;
+    db_funkcije.sacuvajPoruku(poruka, socket.korisnik_id).then((result) => {
+      socket.to(poruka.room_id).emit('primi_poruku', poruka);
+    });
 
+  });
 });
 
 
