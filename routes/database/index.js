@@ -92,9 +92,25 @@ exports.db_funkcije = {
         })
     },
 
-    dohvatiArtikle: () => {
+    dohvatiArtikle: (id_trgovine, sort) => {
+        let upit = 'select * from artikli_data where trgovina_id = $1 ';
+        if (sort != -1) {
+            if (sort === 'cdesc') {
+                upit += 'ORDER BY cijena desc'
+            }
+            else if (sort === 'casc') {
+                upit += 'ORDER BY cijena asc'
+            }
+            else if (sort === 'najnovije') {
+                upit += 'ORDER BY datum_kreiranja asc'
+            }
+            else if (sort === 'najstarije') {
+                upit += 'ORDER BY datum_kreiranja desc'
+            }
+        }
+
         return new Promise((resolve, reject) => {
-            pool.query('select * from artikli_data', (err, result) => {
+            pool.query(upit, [id_trgovine], (err, result) => {
                 if (err) {
                     return reject(err);
                 }
@@ -105,9 +121,25 @@ exports.db_funkcije = {
         })
     },
 
-    dohvatiArtikleZaPocetnu: (korisnik) => {
+    dohvatiArtikleZaPocetnu: (korisnik, sort) => {
+        let upit = 'select * FROM dohvatiArtiklePocetna($1) ';
+        if (sort != -1) {
+            if (sort === 'cdesc') {
+                upit += 'ORDER BY cijena desc'
+            }
+            else if (sort === 'casc') {
+                upit += 'ORDER BY cijena asc'
+            }
+            else if (sort === 'najnovije') {
+                upit += 'ORDER BY datum_kreiranja asc'
+            }
+            else if (sort === 'najstarije') {
+                upit += 'ORDER BY datum_kreiranja desc'
+            }
+        }
+
         return new Promise((resolve, reject) => {
-            pool.query('select * FROM dohvatiArtiklePocetna($1)', [korisnik.id], (err, result) => {
+            pool.query(upit, [korisnik.id], (err, result) => {
                 if (err) {
                     return reject(err);
                 }
@@ -575,7 +607,7 @@ exports.db_funkcije = {
 
     sacuvajPoruku: (poruka, korisnik_id) => {
         return new Promise((resolve, reject) => {
-            pool.query("INSERT INTO chat (c_od, c_ka, tekst_poruke) values ($1, $2, $3) RETURNING *", [korisnik_id, poruka.chat_id, poruka.tekst_poruke], (err, result) => {
+            pool.query("INSERT INTO chat (c_od, c_ka, tekst_poruke, c_room_id) values ($1, $2, $3, $4) RETURNING *", [korisnik_id, poruka.chat_id, poruka.tekst_poruke, poruka.room_id], (err, result) => {
                 if (err) {
                     return reject(err);
                 }

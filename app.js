@@ -85,13 +85,17 @@ const dozvoljenaRuta = (ruta, tip_korisnika) => {
   return false;
 }
 
+const generisiAuthToken = (korisnik, remember_me, JWT_TOKEN) => {
+  let duzina_trajanja = { expiresIn: '900s' };
+  return jwt.sign(korisnik, JWT_TOKEN, duzina_trajanja);
+}
 
 app.use(function (req, res, next) {
 
   const url = req.originalUrl;
   var ima_token = false;
-  var authToken;
-  var decoded;
+  var authToken, refreshToken;
+  var decoded, decoded_refresh_token;
   dotenv.config();
   const JWT_TOKEN = process.env.JWT_TOKEN_SECRET;
 
@@ -112,6 +116,7 @@ app.use(function (req, res, next) {
     // }
 
     authToken = req.cookies.authToken;
+    refreshToken = req.cookies.refreshToken;
     if (authToken === undefined) {
       ima_token = false;
     }
@@ -124,7 +129,10 @@ app.use(function (req, res, next) {
   catch (error) {
     //console.log(error);
     ima_token = false;
+
   }
+
+
 
   if (ima_token === false && rute_dostupne_svima.includes(url)) {
     console.log("IF 1");
@@ -144,7 +152,7 @@ app.use(function (req, res, next) {
   */
 
 
-  
+
 
   if (url === '/login/logout') {
     return next();
@@ -163,7 +171,7 @@ app.use(function (req, res, next) {
   }
 
   return next();
-  
+
   console.log("REDIREKT 2");
   if (req.rola === 1 && admin_rute.includes(url)) {
     return next();

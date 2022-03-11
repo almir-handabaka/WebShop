@@ -89,6 +89,7 @@ const generisiPorukuLijevo = (poruka) => {
 }
 
 // klikom na neki od postojecih chatova prikazuje poruke s tim korisnikom
+// novi_chat = true ako korisnik nije nikad komunicirao s tim profilom
 const otvoriChatSa = (korisnik_id) => {
   $('#poruke').html("");
   $.get("/chat/" + korisnik_id, function (data, status) {
@@ -125,22 +126,49 @@ $(function () {
   console.log("ready!");
 
   $.get("/chat/aktivnost", function (data, status) {
+    $('#aktivnost').html("");
     $('#inputZaPoruku').hide();
     if (status) {
       console.log(data);
       for (let i = 0; i < data.profili.length; i++) {
         let tmp_html = `<button class="tablinks border" onclick="otvoriChatSa('${data.profili[i].id}')"
-        id = "defaultOpen" type = "button" >
+        id = "${data.profili[i].id}" type = "button" >
          ${data.profili[i].ime + " " + data.profili[i].prezime}
           </button >`;
 
         $('#aktivnost').append(tmp_html);
         pridruziSeSobi(data.profili[i].c_room_id);
       }
+
+      let otvoriChat = $('#otvoriChat').attr("novi_chat");
+      try {
+        console.log("try")
+        if (otvoriChat !== "-1" && $('#' + otvoriChat).length != 0) {
+          $('#' + otvoriChat).click();
+          console.log('#' + otvoriChat)
+        }
+        else if (otvoriChat !== "-1") {
+          console.log("else")
+          let tmp_html = `<button class="tablinks border" onclick="otvoriChatSa('${otvoriChat}')"
+        id = "${otvoriChat}" type = "button" >
+         ${"Nova" + " " + "poruka"}</button >`;
+
+          $('#aktivnost').append(tmp_html);
+          console.log("Otvaranje")
+          console.log(otvoriChat);
+          $('#' + otvoriChat).click();
+          otvoriChat = -1;
+        }
+      }
+      catch (error) {
+        console.log(error);
+      }
+
+      window.history.pushState({}, "", "http://localhost:3000/chat");
     }
-
-
   });
+
+
 
 
 });

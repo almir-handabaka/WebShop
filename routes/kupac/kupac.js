@@ -5,14 +5,20 @@ const url = require('url');
 const { db_funkcije } = require('.././database/index.js');
 
 
+
 router.get('/', function (req, res, next) {
+    const url_query = url.parse(req.url, true).query;
+    let sortiraj = -1;
+    if (Object.keys(url_query).length != 0) {
+        sortiraj = url_query.sort;
+    }
     if (req.cookies.firstLogin === "true") {
         req.cookies.firstLogin = true;
     }
     else {
         req.cookies.firstLogin = false;
     }
-    db_funkcije.dohvatiArtikleZaPocetnu(req.korisnik).then((result) => {
+    db_funkcije.dohvatiArtikleZaPocetnu(req.korisnik, sortiraj).then((result) => {
         //console.log(result);
         //console.log(result[0]);
         res.render('kupac/pocetna', { title: 'Web Shop', artikli: result, first_login: req.cookies.firstLogin });
@@ -59,9 +65,15 @@ router.get('/trgovine', function (req, res, next) {
 router.get('/trgovine/:id_trgovine', async function (req, res, next) {
     let id_trgovine = req.params.id_trgovine;
     try {
-        let artikli = await db_funkcije.dohvatiArtikle(id_trgovine);
+        const url_query = url.parse(req.url, true).query;
+        let sortiraj = -1;
+        if (Object.keys(url_query).length != 0) {
+            sortiraj = url_query.sort;
+        }
+
+        let artikli = await db_funkcije.dohvatiArtikle(id_trgovine, sortiraj);
         let trgovina = await db_funkcije.dohvatiPodatkeOTrgovini(id_trgovine);
-        console.log(trgovina);
+        //console.log(trgovina);
         res.render('kupac/trgovina', { title: 'Web Shop', trgovina: trgovina, artikli: artikli });
 
     } catch (error) {

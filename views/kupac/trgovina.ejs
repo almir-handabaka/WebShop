@@ -23,6 +23,7 @@
 
     <div class="px-4 py-1 my-5 ">
       <div class="col-lg-10 mx-auto">
+
         <div class="album py-2">
 
           <div class="container">
@@ -94,7 +95,24 @@
           </div>
         </div>
         <div class="container">
-
+          <ul class="nav justify-content-end navbar-light bg-light my-2">
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page"
+                href="/pocetna/trgovine/<%= trgovina[0].trgovina_id %>?sort=najnovije">Najnovije</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page"
+                href="/pocetna/trgovine/<%= trgovina[0].trgovina_id %>?sort=najstarije">Najstarije</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page"
+                href="/pocetna/trgovine/<%= trgovina[0].trgovina_id %>?sort=casc">Rastuća cijena</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" aria-current="page"
+                href="/pocetna/trgovine/<%= trgovina[0].trgovina_id %>?sort=cdesc">Opadajuća cijena</a>
+            </li>
+          </ul>
           <div class="row row-cols-1 row-cols-sm-2 row-cols-md-5 g-3">
 
 
