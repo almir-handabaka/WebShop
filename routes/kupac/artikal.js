@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var date = require('date-and-time');
 const { db_funkcije } = require('.././database/index.js');
-
+const { dozvoljenaRuta } = require('../helpers/helper.js');
 
 
 router.get('/narudzbe', async function (req, res, next) {
@@ -11,9 +11,40 @@ router.get('/narudzbe', async function (req, res, next) {
         //console.log(narudzbe);
         res.render('kupac/narudzbe', { title: 'Web Shop - Narudzbe', narudzbe: narudzbe });
     } catch (error) {
-        console.log("3")
+
         console.log(error);
         next(error);
+    }
+
+});
+
+router.post('/narudzbe/ocijena', async function (req, res, next) {
+    try {
+        const ocijena = req.body.ocijena;
+        const komentar = req.body.komentar;
+        const id_narudzbe = req.body.id_narudzbe;
+        console.log(ocijena, komentar, id_narudzbe);
+        let result = await db_funkcije.ocjeniArtikal(req.korisnik, ocijena, komentar, id_narudzbe);
+
+        res.sendStatus(200);
+
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(404);
+    }
+
+});
+
+// ocjena, ime kupca, datum kupovine i komentar
+router.get('/narudzbe/recenzije/:artikal_id', async function (req, res, next) {
+    try {
+        const artikal_id = req.params.artikal_id;
+        let result = await db_funkcije.dohvatiSveOcjene(artikal_id);
+        console.log(result);
+        res.status(200).json(result);
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(404);
     }
 
 });
@@ -130,7 +161,7 @@ router.post('/korpa/naruci', function (req, res, next) {
 
 
 // koristit sql funkciju umjesto vise upita na bazu
-router.get('/:artikal_id', async function (req, res, next) {
+router.get('/:artikal_id', dozvoljenaRuta([3]), async function (req, res, next) {
     try {
         let artikal_id = req.params.artikal_id;
         let artikal = await db_funkcije.dohvatiArtikal(artikal_id);
@@ -141,7 +172,7 @@ router.get('/:artikal_id', async function (req, res, next) {
         let ocjene = await db_funkcije.dohvatiOcjene(artikal_id);
         let fotografije = await db_funkcije.dohvatiFotografije(artikal_id);
         let korpa = await db_funkcije.dohvatiKorpu(req.korisnik);
-
+        console.log(ocjene);
         if (ocjene[0] === undefined) {
             ocjene = { count: '0', avg: '0' };
         } else {

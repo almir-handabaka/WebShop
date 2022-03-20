@@ -388,7 +388,7 @@ exports.db_funkcije = {
 
     dohvatiArtikal: (artikal_id) => {
         return new Promise((resolve, reject) => {
-            pool.query("select * from artikli ar left join lokacije_trgovina lt on ar.lokacija = lt.id_lokacije inner join gradovi_lk gl on lt.grad = gl.id_grada inner join trgovine t on ar.trgovina_id = t.t_id inner join korisnici kr on kr.id = t.korisnik_id where ar.id_artikla = $1", [artikal_id], (err, result) => {
+            pool.query("SELECT * FROM dohvatiArtikal($1);", [artikal_id], (err, result) => {
                 if (err) {
                     return reject(err);
                 }
@@ -399,11 +399,34 @@ exports.db_funkcije = {
 
     dohvatiOcjene: (artikal_id) => {
         return new Promise((resolve, reject) => {
-            pool.query("select count(*), avg(vrijednost_ocjene) from ocjene_artikala where id_artikla = $1", [artikal_id], (err, result) => {
+            pool.query("select count(*), avg(ocjena_kupca) from narudzbe where artikal_id = $1 and ocjena_kupca is not null", [artikal_id], (err, result) => {
                 if (err) {
                     return reject(err);
                 }
                 return resolve(result.rows);
+            })
+        })
+    },
+
+    // ocjena, ime kupca, datum kupovine i komentar
+    dohvatiSveOcjene: (artikal_id) => {
+        return new Promise((resolve, reject) => {
+            pool.query("SELECT id_narudzbe,	artikal_id,	porucioc_id,	kolicina	cijena_po_kom, datum_naruc, status_isporuke, ocjena_kupca, komentar_kupca, ime, prezime FROM narudzbe nr INNER JOIN korisnici kr ON nr.porucioc_id = kr.id  WHERE artikal_id = $1 and ocjena_kupca is not null", [artikal_id], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(result.rows);
+            })
+        })
+    },
+
+    ocjeniArtikal: (korisnik, ocijena, komentar, id_narudzbe) => {
+        return new Promise((resolve, reject) => {
+            pool.query("UPDATE narudzbe SET ocjena_kupca = $1, komentar_kupca = $2 WHERE porucioc_id = $3 AND id_narudzbe = $4", [ocijena, komentar, korisnik.id, id_narudzbe], (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve();
             })
         })
     },

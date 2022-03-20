@@ -82,7 +82,13 @@
                         <% if (narudzbe[i].status_isporuke===1 || narudzbe[i].status_isporuke===2) { %>
                           <button type="button" class="btn btn-outline-danger"
                             onclick="otkaziNarudzbu('<%=narudzbe[i].id_narudzbe%>')">Otkaži narudžbu</button>
-                          <% } %>
+
+                          <% } else if (narudzbe[i].status_isporuke===4 && narudzbe[i].ocjena_kupca===null) { %>
+                            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                              data-bs-target="#ocjenaModal"
+                              onclick="ocjena_id_narudzbe = <%= narudzbe[i].id_narudzbe%>">Ocjenite
+                              narudžbu</button>
+                            <% } %>
 
                       </td>
                     </tr>
@@ -103,7 +109,37 @@
     </div>
 
 
-
+    <!-- Modal -->
+    <div class="modal fade" id="ocjenaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Ocijenite narudžbu</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="input-group mb-3">
+              <span class="input-group-text" id="basic-addon3">Ocijena (5 najbolja - 1 najgora) </span>
+              <select id="ocijenaNarudzbe" class="form-select form-select-sm" aria-label=".form-select-sm example">
+                <option selected value="5">5</option>
+                <option value="4">4</option>
+                <option value="3">3</option>
+                <option value="2">2</option>
+                <option value="1">1</option>
+              </select>
+            </div>
+            <div class="input-group py-4">
+              <span class="input-group-text">Komentar</span>
+              <textarea id="komentarNarudzbe" class="form-control" aria-label="With textarea"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zatvori</button>
+            <button type="button" class="btn btn-primary" onclick="ocijeniNarudzbu()">Sačuvaj</button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <script src="/javascripts/artikal.js"></script>
 

@@ -17,6 +17,8 @@ let options = {
 };
 toastr.options = options;
 
+let ocjena_id_narudzbe;
+
 
 const dodajUKorpu = (id_artikla) => {
   console.log("proba 1");
@@ -95,6 +97,74 @@ const otkaziNarudzbu = (id_narudzbe) => {
     },
     error: function (result) {
       toastr["error"]("Greška sa otkazivanjem narudžbe!", "Narudžba");
+    }
+  });
+
+}
+
+
+const ocijeniNarudzbu = () => {
+  const ocijena = $('#ocijenaNarudzbe').val();
+  const komentar = $('#komentarNarudzbe').val();
+  console.log("RAdi")
+  $.ajax({
+    type: "POST",
+    url: "/artikal/narudzbe/ocijena",
+    data: {
+      ocijena: ocijena,
+      komentar: komentar,
+      id_narudzbe: ocjena_id_narudzbe,
+    },
+    success: function (result) {
+      toastr["success"]("Narudžba ocijenjena!", "Narudžba");
+
+    },
+    error: function (result) {
+      toastr["error"]("Greška sa ocjenjivanjem narudžbe!", "Narudžba");
+    }
+  });
+
+}
+
+const otvoriRecenzije = (artikal_id) => {
+
+  $.ajax({
+    type: "GET",
+    url: "/artikal/narudzbe/recenzije/" + artikal_id,
+    success: function (recenzije) {
+      // ispuni modal ocjenama
+      for (let i = 0; i < recenzije.length; i++) {
+        let ocjena_zvijezde = "";
+
+        //<span class="fa fa-star checked"></span>
+        //<span class="fa fa-star"></span>
+
+        for (let j = 0; j < recenzije[i].ocjena_kupca; j++) {
+          ocjena_zvijezde += `<span class="fa fa-star checked"></span>`;
+        }
+
+        for (let j = recenzije[i].ocjena_kupca; j < 5; j++) {
+          ocjena_zvijezde += `<span class="fa fa-star"></span>`;
+        }
+
+
+        tmp_html = `<div class="card" style="width: 18rem;">
+                      <div class="card-body">
+                        <h5 class="card-title">${recenzije[i].ime + " " + recenzije[i].prezime} </h5>
+                        <h6 class="card-subtitle mb-2 text-muted">${ocjena_zvijezde}</h6>
+                        <p class="card-text">${recenzije[i].komentar_kupca}</p>
+                        <h6 class="card-subtitle mb-2 text-muted">${recenzije[i].datum_naruc}</h6>
+                      </div>
+                  </div>`;
+
+        $('#recenzijeBody').append(tmp_html);
+      }
+
+
+      $('#aktivirajModal').click();
+    },
+    error: function (result) {
+
     }
   });
 

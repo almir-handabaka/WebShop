@@ -13,7 +13,7 @@ const JWT_TOKEN = process.env.JWT_TOKEN_SECRET;
 /* Generise JWT token, default vrijeme trajanja tokena je 12h, ako je korisnik 
 čekirao "Zapamti me" onda je vrijeme trajanja 30 dana */
 const generisiAuthToken = (korisnik, remember_me, JWT_TOKEN) => {
-    let duzina_trajanja = { expiresIn: '30d' };
+    let duzina_trajanja = { expiresIn: '900s' };
     return jwt.sign(korisnik, JWT_TOKEN, duzina_trajanja);
 }
 
@@ -64,6 +64,7 @@ router.post('/', function (req, res, next) {
                         res.cookie('authToken', token);
                         res.cookie('refreshToken', token);
                         res.cookie('firstLogin', false);
+                        res.cookie('email', korisnik.email);
                         if (result1[0].first_login === true) {
                             res.cookie('firstLogin', true);
                         }
@@ -100,9 +101,14 @@ router.post('/', function (req, res, next) {
     }
 });
 
-// izbrisati token
+
+
 router.get('/logout', function (req, res, next) {
     res.clearCookie("authToken");
+    res.clearCookie('refreshToken');
+    res.clearCookie('firstLogin');
+    res.clearCookie('email');
+    res.clearCookie('trgToken');
     res.redirect('/');
 });
 
