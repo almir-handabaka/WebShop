@@ -18,7 +18,7 @@ let options = {
 toastr.options = options;
 
 let ocjena_id_narudzbe;
-
+let ucitane_recenzije = false;
 
 const dodajUKorpu = (id_artikla) => {
   console.log("proba 1");
@@ -127,28 +127,28 @@ const ocijeniNarudzbu = () => {
 }
 
 const otvoriRecenzije = (artikal_id) => {
+  if (!ucitane_recenzije) {
+    $.ajax({
+      type: "GET",
+      url: "/artikal/narudzbe/recenzije/" + artikal_id,
+      success: function (recenzije) {
+        ucitane_recenzije = true;
+        for (let i = 0; i < recenzije.length; i++) {
+          let ocjena_zvijezde = "";
 
-  $.ajax({
-    type: "GET",
-    url: "/artikal/narudzbe/recenzije/" + artikal_id,
-    success: function (recenzije) {
-      // ispuni modal ocjenama
-      for (let i = 0; i < recenzije.length; i++) {
-        let ocjena_zvijezde = "";
+          //<span class="fa fa-star checked"></span>
+          //<span class="fa fa-star"></span>
 
-        //<span class="fa fa-star checked"></span>
-        //<span class="fa fa-star"></span>
+          for (let j = 0; j < recenzije[i].ocjena_kupca; j++) {
+            ocjena_zvijezde += `<span class="fa fa-star checked"></span>`;
+          }
 
-        for (let j = 0; j < recenzije[i].ocjena_kupca; j++) {
-          ocjena_zvijezde += `<span class="fa fa-star checked"></span>`;
-        }
-
-        for (let j = recenzije[i].ocjena_kupca; j < 5; j++) {
-          ocjena_zvijezde += `<span class="fa fa-star"></span>`;
-        }
+          for (let j = recenzije[i].ocjena_kupca; j < 5; j++) {
+            ocjena_zvijezde += `<span class="fa fa-star"></span>`;
+          }
 
 
-        tmp_html = `<div class="card" style="width: 18rem;">
+          tmp_html = `<div class="card" style="width: 18rem;">
                       <div class="card-body">
                         <h5 class="card-title">${recenzije[i].ime + " " + recenzije[i].prezime} </h5>
                         <h6 class="card-subtitle mb-2 text-muted">${ocjena_zvijezde}</h6>
@@ -157,15 +157,17 @@ const otvoriRecenzije = (artikal_id) => {
                       </div>
                   </div>`;
 
-        $('#recenzijeBody').append(tmp_html);
+          $('#recenzijeBody').append(tmp_html);
+        }
+
+
+        $('#aktivirajModal').click();
+      },
+      error: function (result) {
+
       }
-
-
-      $('#aktivirajModal').click();
-    },
-    error: function (result) {
-
-    }
-  });
-
+    });
+  } else {
+    $('#aktivirajModal').click();
+  }
 }

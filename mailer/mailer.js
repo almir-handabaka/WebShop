@@ -1,10 +1,11 @@
 "use strict";
-// TBD prebaci varijable u .env
 
+var dotenv = require('dotenv');
 const nodemailer = require("nodemailer");
 const { google } = require("googleapis");
 const OAuth2 = google.auth.OAuth2;
 
+dotenv.config();
 // tekst maila u zavisnosti promjene statusa isporuke
 // prvi element subject, drugi text
 // broj narudzbe, Name of the product. SKU Quantity. Color. Size. Unit price.
@@ -53,11 +54,11 @@ const pripremiSadrzajMaila = (tipMaila, kupac, narudzba) => {
 }
 
 
-// prebaciti u .env
-const CLIENT_ID = '774674605399-5jfrvpnpk71l11tblafgbei0q5kiaa3q.apps.googleusercontent.com';
-const CLIENT_SECRET = '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';
-const REDIRECT_URI = 'https://developers.google.com/oauthplayground';
-const REFRESH_TOKEN = '1//04qjZ_XvPXPnSCgYIARAAGAQSNwF-L9IrcNh38tB-ahI6p48mcwpb9ALg3iAIbt3pz_ArLcAaujK5nyJ-XbFpcZ2SDJ5VH5FXbUY';
+
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const REDIRECT_URI = process.env.REDIRECT_URI;
+const REFRESH_TOKEN = process.env.REFRESH_TOKEN;
 
 const oAuth2Client = new google.auth.OAuth2(
   CLIENT_ID,
@@ -83,7 +84,7 @@ async function sendMail(tipMaila, kupac, narudzba) {
       },
       auth: {
         type: "OAuth2",
-        user: "almir.handabaka@gmail.com",
+        user: process.env.myEmail,
         clientId: CLIENT_ID,
         clientSecret: CLIENT_SECRET,
         refreshToken: REFRESH_TOKEN,
@@ -92,7 +93,7 @@ async function sendMail(tipMaila, kupac, narudzba) {
     });
 
     const mailOptions = {
-      from: 'almir.handabaka@gmail.com',
+      from: process.env.myEmail,
       to: kupac.email,
       subject: sadrzajMaila.subject,
       text: sadrzajMaila.text,

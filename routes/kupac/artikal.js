@@ -161,6 +161,8 @@ router.post('/korpa/naruci', function (req, res, next) {
 
 
 // koristit sql funkciju umjesto vise upita na bazu
+//SELECT * FROM artikli ar INNER JOIN fotografije_artikala fa ON ar.id_artikla = fa.id_artikla INNER JOIN narudzbe nr
+//ON ar.id_artikla = nr.artikal_id WHERE ar.id_artikla = 276;
 router.get('/:artikal_id', dozvoljenaRuta([3]), async function (req, res, next) {
     try {
         let artikal_id = req.params.artikal_id;
